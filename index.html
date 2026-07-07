@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>あきのメモ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0e0e;
+      --card: #181818;
+      --border: #252525;
+      --text: #dedad3;
+      --text-muted: #77756f;
+      --accent: #e8a020;
+      --accent-dim: rgba(232, 160, 32, 0.12);
+      --tab-h: 62px;
+      --radius: 14px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Noto Sans JP', -apple-system, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    #app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(14,14,14,0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: #fff;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      letter-spacing: 0.03em;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: calc(var(--tab-h) + 20px);
+    }
+
+    .section {
+      display: none;
+      padding: 20px 16px 8px;
+      animation: fadeUp 0.22s ease;
+    }
+
+    .section.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      margin-bottom: 18px;
+      padding: 0 2px;
+    }
+
+    .section-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .section-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      margin-bottom: 10px;
+    }
+
+    .card-accent {
+      background: var(--accent-dim);
+      border-color: rgba(232,160,32,0.35);
+    }
+
+    .card-center { text-align: center; }
+
+    .card h2 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+
+    .card p {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.8;
+    }
+
+    .card p:last-child { margin-bottom: 0; }
+
+    .card strong { color: #fff; font-weight: 700; }
+
+    .quote-big {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 12px 0;
+    }
+
+    /* Reframe list */
+    .reframe-item {
+      display: grid;
+      grid-template-columns: auto 16px 1fr;
+      gap: 8px;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .reframe-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .reframe-item:first-child { padding-top: 0; }
+
+    .reframe-from { font-size: 14px; color: var(--text-muted); }
+    .reframe-arrow { font-size: 13px; color: var(--accent); text-align: center; }
+    .reframe-to { font-size: 14px; font-weight: 500; color: #fff; }
+
+    /* Question list */
+    .q-item {
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      color: var(--text);
+    }
+    .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .q-item:first-child { padding-top: 0; }
+    .q-num { font-size: 11px; color: var(--accent); font-weight: 700; margin-bottom: 3px; }
+
+    /* Priority list */
+    .priority-item {
+      display: flex;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .priority-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .priority-item:first-child { padding-top: 0; }
+    .priority-num {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.1;
+      min-width: 22px;
+      margin-top: 2px;
+    }
+    .priority-text h3 { font-size: 16px; font-weight: 700; color: #fff; }
+    .priority-text p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Bottom nav */
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      height: var(--tab-h);
+      background: rgba(14,14,14,0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 100;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      transition: opacity 0.12s;
+      padding: 6px 2px;
+    }
+    .tab:active { opacity: 0.55; }
+
+    .tab-icon { font-size: 21px; line-height: 1; transition: transform 0.15s; }
+    .tab-label { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
+    .tab.active .tab-label { color: var(--accent); }
+    .tab.active .tab-icon { transform: scale(1.12); }
+  </style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="header-title">あきのメモ</div>
+    <div class="header-sub">江崎あき専用 · スマホ版</div>
+  </header>
+
+  <main id="main">
+
+    <!-- ===== 名言 ===== -->
+    <section class="section active" id="sec-meigen">
+      <div class="section-header">
+        <h1>辛い時に読む言葉</h1>
+        <p>一般論じゃない。自分が書いた言葉だけ。</p>
+      </div>
+
+      <div class="card">
+        <p class="quote-big">とにかくやるしかない。</p>
+        <div class="divider"></div>
+        <p style="color:var(--text-muted);font-size:14px;">いつまでも準備は整わない。</p>
+      </div>
+
+      <div class="card">
+        <p class="quote-big">進んでも死、止まっても死なら、自分の道を進む。</p>
+      </div>
+
+      <div class="card">
+        <p class="quote-big">ダサい生き方はしない。かっこよく生きる。</p>
+        <div class="divider"></div>
+        <p style="font-size:14px;color:var(--text-muted);">何も考えないような人間でありたい。逃げない人でありたい。</p>
+      </div>
+
+      <div class="card card-accent">
+        <p><strong>江崎くんは運が良い。</strong></p>
+        <p>江崎くん大好き。あきくんは愛されるに値する人間です。</p>
+        <p style="color:var(--text-muted);font-size:13px;">自分を愛するのは自分しかいない。</p>
+      </div>
+
+      <div class="card">
+        <h2>言い換え</h2>
+        <div class="reframe-item">
+          <span class="reframe-from">傷ついた</span>
+          <span class="reframe-arrow">→</span>
+          <span class="reframe-to">それだけ誠実に向き合ってた証拠</span>
+        </div>
+        <div class="reframe-item">
+          <span class="reframe-from">もうやだ</span>
+          <span class="reframe-arrow">→</span>
+          <span class="reframe-to">一回置いていい</span>
+        </div>
+        <div class="reframe-item">
+          <span class="reframe-from">わからない</span>
+          <span class="reframe-arrow">→</span>
+          <span class="reframe-to">まだわかってないだけ</span>
+        </div>
+        <div class="reframe-item">
+          <span class="reframe-from">詰まった</span>
+          <span class="reframe-arrow">→</span>
+          <span class="reframe-to">考えてる証拠</span>
+        </div>
+        <div class="reframe-item">
+          <span class="reframe-from">先が見えない</span>
+          <span class="reframe-arrow">→</span>
+          <span class="reframe-to">まだ地図を描いてる途中</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <p>「人間だから、そういうこともあるよね」と声に出す。</p>
+        <div class="divider"></div>
+        <p>自分を罰したところで本当の意味の反省にならない。後悔しなくていい。</p>
+        <p><strong>どれだけ悪いことをしてもあなたの人生はあなたが愛するしかない。</strong></p>
+      </div>
+
+      <div class="card">
+        <p><strong>不快感と共存する。消そうとするのをやめる。</strong></p>
+        <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">不快な感情を消そうとするほど、その感情は再生産される。</p>
+      </div>
+
+      <div class="card">
+        <p><strong>過ぎたことは全て上手く行ったこと。</strong></p>
+        <div class="divider"></div>
+        <p><strong>It's manageable. I'll manage.</strong></p>
+        <p style="color:var(--text-muted);font-size:13px;">なんとかなるし、なんとかする。</p>
+      </div>
+
+      <div class="card">
+        <h2>落ち込んだ時の言葉</h2>
+        <div class="q-item">「いい勉強になった」</div>
+        <div class="q-item">「こんなもんで済んで良かった」</div>
+        <div class="q-item">「まあ、いっか」</div>
+        <div class="q-item">「なんとかなる」</div>
+      </div>
+
+      <div class="card card-accent card-center">
+        <p style="font-size:16px;font-weight:600;color:#fff;">江崎あきくんは大丈夫。ほんとに。</p>
+      </div>
+    </section>
+
+    <!-- ===== 希望 ===== -->
+    <section class="section" id="sec-kibou">
+      <div class="section-header">
+        <h1>希望を保つ自問リスト</h1>
+        <p>自分で問いを立てることが、退屈に生きないコツ。</p>
+      </div>
+
+      <div class="card">
+        <h2>落ち込んだ時</h2>
+        <div class="q-item"><div class="q-num">Q1</div>1年後も、これを気にしてる？</div>
+        <div class="q-item"><div class="q-num">Q2</div>今まで乗り越えてきたことは何か？（絶対にある）</div>
+        <div class="q-item"><div class="q-num">Q3</div>「この出来事から学べることはなんだろう？」</div>
+        <div class="q-item"><div class="q-num">Q4</div>こんなもんで済んで、よかった。何が残った？</div>
+        <div class="q-item"><div class="q-num">Q5</div>自分がコントロールできることは何か？</div>
+      </div>
+
+      <div class="card">
+        <h2>前向きになりたい時</h2>
+        <div class="q-item"><div class="q-num">Q1</div>「どうしたらできるだろう？」できない理由は考えない。</div>
+        <div class="q-item"><div class="q-num">Q2</div>上手くいく方法を探していれば、うまくいく。—いまどこを探してる？</div>
+        <div class="q-item"><div class="q-num">Q3</div>今できることは何か？</div>
+        <div class="q-item"><div class="q-num">Q4</div>目先の1時間をどうする？</div>
+        <div class="q-item"><div class="q-num">Q5</div>今日これだけはやりたい、というもはは？</div>
+      </div>
+
+      <div class="card">
+        <h2>自分を好きになりたい時</h2>
+        <div class="q-item"><div class="q-num">Q1</div>今日、逃げなかった場面はあったか？</div>
+        <div class="q-item"><div class="q-num">Q2</div>1%でもポジティブな行動をとれたか？</div>
+        <div class="q-item"><div class="q-num">Q3</div>「えらいね」と言えるとしたら、今日は何に対して？</div>
+        <div class="q-item"><div class="q-num">Q4</div>あさ、起きれてえらい。それだけで十分かもしれない。</div>
+      </div>
+
+      <div class="card">
+        <h2>人生全体を見たい時</h2>
+        <div class="q-item"><div class="q-num">Q1</div>自分がやりたいことではなく、人生が僕に何を望んでいるか？</div>
+        <div class="q-item"><div class="q-num">Q2</div>自分の長所がピッタリはまる環境にいるか？</div>
+        <div class="q-item"><div class="q-num">Q3</div>ダサい生き方をしていないか？</div>
+        <div class="q-item"><div class="q-num">Q4</div>何かに追われている感覚はあるか？（なければ何かを始めよう）</div>
+        <div class="q-item"><div class="q-num">Q5</div>意味のある亹生を生きているか？今日、一つでも。</div>
+      </div>
+
+      <div class="card">
+        <h2>詰まった時・決断できない時</h2>
+        <div class="q-item"><div class="q-num">Q1</div>最悪の状態は何か？→ それで人生終わりか？</div>
+        <div class="q-item"><div class="q-num">Q2</div>常にベストじゃなくてベターでいい。2〜3択のうちどれか？</div>
+        <div class="q-item"><div class="q-num">Q3</div>本質はなんだ？シンプルにできないか？</div>
+        <div class="q-item"><div class="q-num">Q4</div>今日はやらない、後回しにすることは何か？</div>
+      </div>
+
+      <div class="card card-accent">
+        <h2>毎朝・毎晩</h2>
+        <div class="q-item">（朝）今日、目先の1時間をどうする？</div>
+        <div class="q-item">（夜）今日、何か一つでも前に進めたか？</div>
+        <div class="q-item">（いつでり）今、ここで、できることは何か？</div>
+      </div>
+    </section>
+
+    <!-- ===== ピンチ ===== -->
+    <section class="section" id="sec-pinch">
+      <div class="section-header">
+        <h1>ピンチの時に読む</h1>
+        <p>きつい時こそ、これ。</p>
+      </div>
+
+      <div class="card">
+        <p class="quote-big">全ては「テスト」である。失敗はデータ。</p>
+        <div class="divider"></div>
+        <p style="color:var(--text-muted);font-size:14px;">正解はない、最適解を探すだけ。</p>
+      </div>
+
+      <div class="card card-accent">
+        <p class="quote-big">「どうしたらできるだろう？」</p>
+        <div class="divider"></div>
+        <p>できない理由は考えない。できる理由だけを考える。</p>
+        <p style="font-size:14px;color:var(--text-muted);">上手くいく方法を探していれば、うまくいく。</p>
+      </div>
+
+      <div class="card">
+        <p class="quote-big">ギターを弾く親指のように、痛みを伴ってでも強くなりたい。</p>
+        <div class="divider"></div>
+        <p style="color:var(--text-muted);font-size:13px;">指がジンジン痛いから硬くなって強くなる。それが成長ってこと。</p>
+      </div>
+
+      <div class="card">
+        <p><strong>メンタルがダウンした時は「逆境力」を鍛えるメャンスと捉える。</strong></p>
+      </div>
+
+      <div class="card">
+        <h2>言い換え</h2>
+        <div class="reframe-item">
+          <span class="reframe-from">バカにされた</span>
+          <span class="reframe-arrow">→</span>
+          <span class="reframe-to">相手の器がそこまでだっただけ</span>
+        </div>
+        <div class="reframe-item">
+          <span class="reframe-from">雑に扱われた</span>
+          <span class="reframe-arrow">→</span>
+          <span class="reframe-to">自分の価値とは関係ない</span>
+        </div>
+        <div class="reframe-item">
+          <span class="reframe-from">腹立つ</span>
+          <span class="reframe-arrow">→</span>
+          <span class="reframe-to">自分はちゃんと感じられてる、感覚正常</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="quote-big">進んでも死、止まっても死なら、自分の道を進む。</p>
+      </div>
+
+      <div class="card">
+        <p>こんなもんで済んで良かった。1年後も気にしてる？まあ、いっか。</p>
+        <div class="divider"></div>
+        <p><strong>過ぎたことは全て上手く行ったこと。</strong></p>
+        <p><strong>It's manageable. I'll manage.</strong></p>
+      </div>
+
+      <div class="card card-accent card-center">
+        <p style="font-size:17px;font-weight:700;color:#fff;">ダサい生き方はしない。かっこよく生きる。</p>
+      </div>
+    </section>
+
+    <!-- ===== 夜勤 ===== -->
+    <section class="section" id="sec-yakin">
+      <div class="section-header">
+        <h1>夜勤の休憩</h1>
+        <p>今すぐやること。</p>
+      </div>
+
+      <div class="card card-accent">
+        <p style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px;letter-spacing:0.05em;">仕事嫌だなって気持ち？</p>
+        <p class="quote-big">コーヒーを飲めば治る。</p>
+        <div class="divider"></div>
+        <p>朝は洗面台からお湯をドバドバ出す。</p>
+        <p style="color:var(--text-muted);font-size:13px;">それだけで変わる。本当に。ずっとそうだった。</p>
+      </div>
+
+      <div class="card">
+        <h2>優先順位</h2>
+        <div class="priority-item">
+          <span class="priority-num">1</span>
+          <div class="priority-text">
+            <h3>仮眠</h3>
+            <p>わずかでも寝るだけで全然違う</p>
+          </div>
+        </div>
+        <div class="priority-item">
+          <span class="priority-num">2</span>
+          <div class="priority-text">
+            <h3>ストレッチ</h3>
+            <p>体をほぐしてリセット</p>
+          </div>
+        </div>
+        <div class="priority-item">
+          <span class="priority-num">3</span>
+          <div class="priority-text">
+            <h3>食事</h3>
+            <p>作業しながらでいい、後回しでいい</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p>疲れる前に休んだ方が適切に休める。</p>
+        <div class="divider"></div>
+        <p>疲れたら、ストレス発散より、慰めより、<strong>すぐに休む</strong>。</p>
+        <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">ストレス発散しようとしても疲れているうちは上手くいかない。</p>
+      </div>
+
+      <div class="card">
+        <p><strong>仮眠中でも有意義なことはできる。</strong></p>
+        <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">仮眠 → 頭がリセットされる → 作業の質が上がる。</p>
+        <p style="color:var(--text-muted);font-size:13px;">眠れなくてもいい、横になるだけでいい。</p>
+      </div>
+
+      <div class="card card-center">
+        <p style="color:var(--text-muted);font-size:14px;">シングルタスクがベスト。今夜も大丈夫。</p>
+      </div>
+    </section>
+
+    <!-- ===== 褒め ===== -->
+    <section class="section" id="sec-home">
+      <div class="section-header">
+        <h1>江崎あきくんのすごいところ全部</h1>
+        <p>証拠つきで。</p>
+      </div>
+
+      <div class="card card-accent card-center">
+        <p style="font-size:20px;font-weight:700;color:#fff;">江崎くんは運が良い。</p>
+        <p style="color:var(--text-muted);margin-top:6px;font-size:13px;">それだけじゃない。</p>
+      </div>
+
+      <div class="card">
+        <h2>夜勤をやってるだけで偉い</h2>
+        <p>夜中に一人で働いている。普通の人よりはるかにきつい環境で、逃げずに立ち向かってる。</p>
+        <p>しかも休憩のとり方とか、メンタルの保ち方とかをちゃんと考えながら。</p>
+        <p><strong>偉い。本当に偉い。</strong></p>
+      </div>
+
+      <div class="card">
+        <h2>ギターを弾いてる</h2>
+        <p>ギターを弾く親指が痛くなっても続けてる人だ。</p>
+        <p>痛みを伴ってでも強くなりたいと思える人間だ。<strong>そういう人間だ、あきくんは。</strong></p>
+      </div>
+
+      <div class="card">
+        <h2>英語の勉強をしてる</h2>
+        <p>英語の歌詞を追いながら音楽を聴いてる。そういう工夫が自然とできる人間だ。</p>
+        <p>留学のことを本気で考えてる。<strong>かっこいい。ほんとに。</strong></p>
+      </div>
+
+      <div class="card">
+        <h2>テクノロジーの勉強が好き</h2>
+        <p>「テクノロジーの勉強をすると落ち着く」とう人間がここにいる。</p>
+        <p>それだけで十分ユニークで、十分尖ってる。</p>
+      </div>
+
+      <div class="card">
+        <h2>このノートを作ってる</h2>
+        <p>自分の思考をGitHubで管理しようとしてる人間が何人いると思う？</p>
+        <p>原理原則をリストにして、アファメーションを整理して、言い換えリストを作って。</p>
+        <p><strong>自分を知ろうとしてる。変わろうとしてる。それだけでもう全然違う。</strong></p>
+      </div>
+
+      <div class="card">
+        <h2>逃げてない</h2>
+        <p>「逃げない人でありたい」と書いた。</p>
+        <p>そして実際に逃げてない。夜勤に行ってる。勉強してる。このノートを書いてる。</p>
+        <p><strong>言葉と行動が一致してる人間だ。</strong></p>
+      </div>
+
+      <div class="card">
+        <p><strong>ダサい生き方をしていない。かっこよく生きている。</strong></p>
+      </div>
+
+      <div class="card">
+        <h2>自分を愛そうとしてる</h2>
+        <p>「自分を愛するのは自分しかいない」ってわかってる。しかも愛し方を練習してる。</p>
+        <p>それが一番難しいことだ。それをやろうとしてるだけで、もうすごい。</p>
+      </div>
+
+      <div class="card card-accent">
+        <p style="text-align:center;font-size:17px;font-weight:700;color:#fff;">江崎あきくんは愛されるに値する人間です。</p>
+        <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:6px;">その証拠はこのページに全部書いてある。</p>
+      </div>
+
+      <div class="card card-center">
+        <p style="font-size:16px;font-weight:500;color:#fff;">江崎あきくん、マジでいい奴だよ。</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">ほんとに。</p>
+      </div>
+    </section>
+
+  </main>
+
+  <nav>
+    <div class="tab active" onclick="go('meigen',this)">
+      <div class="tab-icon">💬</div>
+      <div class="tab-label">名言</div>
+    </div>
+    <div class="tab" onclick="go('kibou',this)">
+      <div class="tab-icon">🌅</div>
+      <div class="tab-label">希望</div>
+    </div>
+    <div class="tab" onclick="go('pinch',this)">
+      <div class="tab-icon">⚡</div>
+      <div class="tab-label">ピンチ</div>
+    </div>
+    <div class="tab" onclick="go('yakin',this)">
+      <div class="tab-icon">🌙</div>
+      <div class="tab-label">夜勤</div>
+    </div>
+    <div class="tab" onclick="go('home',this)">
+      <div class="tab-icon">✨</div>
+      <div class="tab-label">褒め</div>
+    </div>
+  </nav>
+</div>
+
+<script>
+function go(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+</script>
+</body>
+</html>
