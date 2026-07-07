@@ -238,6 +238,30 @@
     .tab-label { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
     .tab.active .tab-label { color: var(--accent); }
     .tab.active .tab-icon { transform: scale(1.12); }
+
+    /* Shuffle button */
+    .shuffle-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .shuffle-btn, .show-all-btn {
+      flex: 1;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: opacity 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+      letter-spacing: 0.01em;
+    }
+    .shuffle-btn:active, .show-all-btn:active { opacity: 0.65; transform: scale(0.97); }
+    .shuffle-btn { background: var(--accent); color: #111; }
+    .show-all-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); display: none; }
+    #sec-meigen.shuffled .show-all-btn { display: block; }
   </style>
 </head>
 <body>
@@ -254,6 +278,10 @@
       <div class="section-header">
         <h1>辛い時に読む言葉</h1>
         <p>一般論じゃない。自分が書いた言葉だけ。</p>
+        <div class="shuffle-bar">
+          <button class="shuffle-btn" onclick="shuffleMeigen()">🎲 シャッフル</button>
+          <button class="show-all-btn" onclick="showAllMeigen()">↩ 全部見る</button>
+        </div>
       </div>
 
       <div class="card">
@@ -361,7 +389,7 @@
         <div class="q-item"><div class="q-num">Q2</div>上手くいく方法を探していれば、うまくいく。—いまどこを探してる？</div>
         <div class="q-item"><div class="q-num">Q3</div>今できることは何か？</div>
         <div class="q-item"><div class="q-num">Q4</div>目先の1時間をどうする？</div>
-        <div class="q-item"><div class="q-num">Q5</div>今日これだけはやりたい、というもはは？</div>
+        <div class="q-item"><div class="q-num">Q5</div>今日これだけはやりたい、というものは？</div>
       </div>
 
       <div class="card">
@@ -378,7 +406,7 @@
         <div class="q-item"><div class="q-num">Q2</div>自分の長所がピッタリはまる環境にいるか？</div>
         <div class="q-item"><div class="q-num">Q3</div>ダサい生き方をしていないか？</div>
         <div class="q-item"><div class="q-num">Q4</div>何かに追われている感覚はあるか？（なければ何かを始めよう）</div>
-        <div class="q-item"><div class="q-num">Q5</div>意味のある亹生を生きているか？今日、一つでも。</div>
+        <div class="q-item"><div class="q-num">Q5</div>意味のある人生を生きているか？今日、一つでも。</div>
       </div>
 
       <div class="card">
@@ -393,7 +421,7 @@
         <h2>毎朝・毎晩</h2>
         <div class="q-item">（朝）今日、目先の1時間をどうする？</div>
         <div class="q-item">（夜）今日、何か一つでも前に進めたか？</div>
-        <div class="q-item">（いつでり）今、ここで、できることは何か？</div>
+        <div class="q-item">（いつでも）今、ここで、できることは何か？</div>
       </div>
     </section>
 
@@ -424,7 +452,7 @@
       </div>
 
       <div class="card">
-        <p><strong>メンタルがダウンした時は「逆境力」を鍛えるメャンスと捉える。</strong></p>
+        <p><strong>メンタルがダウンした時は「逆境力」を鍛えるチャンスと捉える。</strong></p>
       </div>
 
       <div class="card">
@@ -553,7 +581,7 @@
 
       <div class="card">
         <h2>テクノロジーの勉強が好き</h2>
-        <p>「テクノロジーの勉強をすると落ち着く」とう人間がここにいる。</p>
+        <p>「テクノロジーの勉強をすると落ち着く」という人間がここにいる。</p>
         <p>それだけで十分ユニークで、十分尖ってる。</p>
       </div>
 
@@ -624,6 +652,23 @@ function go(id, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
   el.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+
+function shuffleMeigen() {
+  const sec = document.getElementById('sec-meigen');
+  const cards = Array.from(sec.querySelectorAll('.card'));
+  cards.forEach(c => { c.style.display = 'none'; });
+  const pick = cards[Math.floor(Math.random() * cards.length)];
+  pick.style.display = '';
+  sec.classList.add('shuffled');
+  document.getElementById('main').scrollTop = 0;
+}
+
+function showAllMeigen() {
+  const sec = document.getElementById('sec-meigen');
+  sec.querySelectorAll('.card').forEach(c => { c.style.display = ''; });
+  sec.classList.remove('shuffled');
   document.getElementById('main').scrollTop = 0;
 }
 </script>
