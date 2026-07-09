@@ -8,260 +8,72 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0e0e0e;
-      --card: #181818;
-      --border: #252525;
-      --text: #dedad3;
-      --text-muted: #77756f;
-      --accent: #e8a020;
-      --accent-dim: rgba(232, 160, 32, 0.12);
-      --tab-h: 62px;
-      --radius: 14px;
+      --bg: #0e0e0e; --card: #181818; --border: #252525;
+      --text: #dedad3; --text-muted: #77756f;
+      --accent: #e8a020; --accent-dim: rgba(232,160,32,0.12);
+      --tab-h: 62px; --radius: 14px;
     }
-
-    html, body {
-      height: 100%;
-      font-family: 'Noto Sans JP', -apple-system, system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 16px;
-      line-height: 1.75;
-      -webkit-font-smoothing: antialiased;
-      overscroll-behavior: none;
-    }
-
-    #app {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    header {
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(14,14,14,0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      flex-shrink: 0;
-    }
-
-    .header-title {
-      font-size: 19px;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      color: #fff;
-    }
-
-    .header-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
-      letter-spacing: 0.03em;
-    }
-
-    main {
-      flex: 1;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: calc(var(--tab-h) + 20px);
-    }
-
-    .section {
-      display: none;
-      padding: 20px 16px 8px;
-      animation: fadeUp 0.22s ease;
-    }
-
+    html, body { height: 100%; font-family: 'Noto Sans JP', -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.75; -webkit-font-smoothing: antialiased; overscroll-behavior: none; }
+    #app { height: 100%; display: flex; flex-direction: column; max-width: 600px; margin: 0 auto; }
+    header { padding: 18px 20px 14px; border-bottom: 1px solid var(--border); background: rgba(14,14,14,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; flex-shrink: 0; }
+    .header-title { font-size: 19px; font-weight: 700; letter-spacing: 0.01em; color: #fff; }
+    .header-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; letter-spacing: 0.03em; }
+    main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(var(--tab-h) + 20px); }
+    .section { display: none; padding: 20px 16px 8px; animation: fadeUp 0.22s ease; }
     .section.active { display: block; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-header {
-      margin-bottom: 18px;
-      padding: 0 2px;
-    }
-
-    .section-header h1 {
-      font-size: 22px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.3;
-    }
-
-    .section-header p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 16px;
-      margin-bottom: 10px;
-    }
-
-    .card-accent {
-      background: var(--accent-dim);
-      border-color: rgba(232,160,32,0.35);
-    }
-
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .section-header { margin-bottom: 18px; padding: 0 2px; }
+    .section-header h1 { font-size: 22px; font-weight: 700; color: #fff; line-height: 1.3; }
+    .section-header p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; margin-bottom: 10px; }
+    .card-accent { background: var(--accent-dim); border-color: rgba(232,160,32,0.35); }
     .card-center { text-align: center; }
-
-    .card h2 {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 14px;
-    }
-
-    .card p {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 8px;
-      line-height: 1.8;
-    }
-
+    .card h2 { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+    .card p { font-size: 15px; color: var(--text); margin-bottom: 8px; line-height: 1.8; }
     .card p:last-child { margin-bottom: 0; }
-
     .card strong { color: #fff; font-weight: 700; }
-
-    .quote-big {
-      font-size: 20px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.5;
-      letter-spacing: -0.01em;
-    }
-
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 12px 0;
-    }
-
-    /* Reframe list */
-    .reframe-item {
-      display: grid;
-      grid-template-columns: auto 16px 1fr;
-      gap: 8px;
-      align-items: baseline;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    .quote-big { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.5; letter-spacing: -0.01em; }
+    .divider { height: 1px; background: var(--border); margin: 12px 0; }
+    .reframe-item { display: grid; grid-template-columns: auto 16px 1fr; gap: 8px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--border); }
     .reframe-item:last-child { border-bottom: none; padding-bottom: 0; }
     .reframe-item:first-child { padding-top: 0; }
-
     .reframe-from { font-size: 14px; color: var(--text-muted); }
     .reframe-arrow { font-size: 13px; color: var(--accent); text-align: center; }
     .reframe-to { font-size: 14px; font-weight: 500; color: #fff; }
-
-    /* Question list */
-    .q-item {
-      padding: 11px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 15px;
-      color: var(--text);
-    }
+    .q-item { padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text); }
     .q-item:last-child { border-bottom: none; padding-bottom: 0; }
     .q-item:first-child { padding-top: 0; }
     .q-num { font-size: 11px; color: var(--accent); font-weight: 700; margin-bottom: 3px; }
-
-    /* Priority list */
-    .priority-item {
-      display: flex;
-      gap: 14px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      align-items: flex-start;
-    }
+    .priority-item { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
     .priority-item:last-child { border-bottom: none; padding-bottom: 0; }
     .priority-item:first-child { padding-top: 0; }
-    .priority-num {
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--accent);
-      line-height: 1.1;
-      min-width: 22px;
-      margin-top: 2px;
-    }
+    .priority-num { font-size: 26px; font-weight: 700; color: var(--accent); line-height: 1.1; min-width: 22px; margin-top: 2px; }
     .priority-text h3 { font-size: 16px; font-weight: 700; color: #fff; }
     .priority-text p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
-
-    /* Bottom nav */
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 600px;
-      height: var(--tab-h);
-      background: rgba(14,14,14,0.96);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-top: 1px solid var(--border);
-      display: flex;
-      z-index: 100;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    .tab {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      transition: opacity 0.12s;
-      padding: 6px 2px;
-    }
-    .tab:active { opacity: 0.55; }
-
-    .tab-icon { font-size: 21px; line-height: 1; transition: transform 0.15s; }
-    .tab-label { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
-    .tab.active .tab-label { color: var(--accent); }
-    .tab.active .tab-icon { transform: scale(1.12); }
-
-    /* Shuffle button */
-    .shuffle-bar {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-    }
-    .shuffle-btn, .show-all-btn {
-      flex: 1;
-      padding: 11px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-      transition: opacity 0.15s, transform 0.1s;
-      -webkit-tap-highlight-color: transparent;
-      letter-spacing: 0.01em;
-    }
+    .shuffle-bar { display: flex; gap: 8px; margin-bottom: 12px; }
+    .shuffle-btn, .show-all-btn { flex: 1; padding: 11px 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; font-family: inherit; transition: opacity 0.15s, transform 0.1s; -webkit-tap-highlight-color: transparent; letter-spacing: 0.01em; }
     .shuffle-btn:active, .show-all-btn:active { opacity: 0.65; transform: scale(0.97); }
     .shuffle-btn { background: var(--accent); color: #111; }
     .show-all-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); display: none; }
     #sec-meigen.shuffled .show-all-btn { display: block; }
+    nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; height: var(--tab-h); background: rgba(14,14,14,0.96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid var(--border); display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom, 0px); }
+    .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transition: opacity 0.12s; padding: 6px 2px; }
+    .tab:active { opacity: 0.55; }
+    .tab-icon { font-size: 18px; line-height: 1; transition: transform 0.15s; }
+    .tab-label { font-size: 9px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
+    .tab.active .tab-label { color: var(--accent); }
+    .tab.active .tab-icon { transform: scale(1.12); }
+    .score-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+    .score-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .score-row:first-child { padding-top: 0; }
+    .score-label { color: var(--text); font-weight: 500; }
+    .score-scale { color: var(--text-muted); font-size: 12px; }
+    .score-num { font-size: 22px; font-weight: 700; color: var(--accent); min-width: 38px; text-align: right; }
+    .warn-item { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text); display: flex; gap: 10px; align-items: flex-start; }
+    .warn-item:last-child { border-bottom: none; }
+    .warn-item:first-child { padding-top: 0; }
+    .warn-check { color: var(--accent); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -270,7 +82,6 @@
     <div class="header-title">あきのメモ</div>
     <div class="header-sub">江崎あき専用 · スマホ版</div>
   </header>
-
   <main id="main">
 
     <!-- ===== 名言 ===== -->
@@ -278,93 +89,140 @@
       <div class="section-header">
         <h1>辛い時に読む言葉</h1>
         <p>一般論じゃない。自分が書いた言葉だけ。</p>
-        <div class="shuffle-bar">
-          <button class="shuffle-btn" onclick="shuffleMeigen()">🎲 シャッフル</button>
-          <button class="show-all-btn" onclick="showAllMeigen()">↩ 全部見る</button>
-        </div>
+      </div>
+      <div class="shuffle-bar">
+        <button class="shuffle-btn" onclick="shuffleMeigen()">🔀 シャッフル</button>
+        <button class="show-all-btn" onclick="showAllMeigen()">全部見る</button>
       </div>
 
-      <div class="card">
-        <p class="quote-big">とにかくやるしかない。</p>
-        <div class="divider"></div>
-        <p style="color:var(--text-muted);font-size:14px;">いつまでも準備は整わない。</p>
-      </div>
+      <!-- オリジナル名言 -->
+      <div class="card"><p class="quote-big">とにかくやるしかない。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">あつまでも準備は整わない。</p></div>
+      <div class="card"><p class="quote-big">進んでも死、止まっても死なら、自分の道を進む。</p></div>
+      <div class="card"><p class="quote-big">ダサえ生き方はしない。かっこよく生きる。</p><div class="divider"></div><p style="font-size:14px;color:var(--text-muted);">何も考えないような人間でありたい。逃げない人でありたい。</p></div>
+      <div class="card card-accent"><p><strong>江崎くんは運が良い。</strong></p><p>江崎くん大好き。あきくんは愛されるに値する人間です。</p><p style="color:var(--text-muted);font-size:13px;">自分を愛するのは自分しかいない。</p></div>
+      <div class="card"><h2>言い換え</h2><div class="reframe-item"><span class="reframe-from">傷ついた</span><span class="reframe-arrow">→</span><span class="reframe-to">それだけ誠実に向き合ってた証拠</span></div><div class="reframe-item"><span class="reframe-from">もうやだ</span><span class="reframe-arrow">→</span><span class="reframe-to">一回置いていい</span></div><div class="reframe-item"><span class="reframe-from">わからない</span><span class="reframe-arrow">→</span><span class="reframe-to">まだわかってないだけ</span></div><div class="reframe-item"><span class="reframe-from">詰まった</span><span class="reframe-arrow">→</span><span class="reframe-to">考えてる証拠</span></div><div class="reframe-item"><span class="reframe-from">先が見えない</span><span class="reframe-arrow">→</span><span class="reframe-to">まだ地図を描いてる途中</span></div></div>
+      <div class="card"><p>「人間だから、そういうこともあるよね」と声に出す。</p><div class="divider"></div><p>自分を罰したところで本当の意味の反省にならない。後悔しなくていい。</p><p><strong>どれだけ悪いことをしてもあなたの人生はあなが愛するしかない。</strong></p></div>
+      <div class="card"><p><strong>不快感と共存する。消そうとするのをめもる。</strong></p><p style="color:var(--text-muted);font-size:13px;margin-top:6px;">不快な感情を消そうとするほど、その感情は再生産される。</p></div>
+      <div class="card"><p><strong>過ぎたことは全て上手く行ったこと。</strong></p><div class="divider"></div><p><strong>It's manageable. I'll manage.</strong></p><p style="color:var(--text-muted);font-size:13px;">なんとかなるし、なんとかする。</p></div>
+      <div class="card"><h2>落ち込んだ時の言葉</h2><div class="q-item">「いい勉強になった」</div><div class="q-item">「こんなもんで済んで良かった」</div><div class="q-item">「まあ、いっか」</div><div class="q-item">「なんとかなる」</div></div>
 
-      <div class="card">
-        <p class="quote-big">進んでも死、止まっても死なら、自分の道を進む。</p>
-      </div>
+      <!-- 追加名言: 挑戦・勇気 -->
+      <div class="card"><p class="quote-big">行動するかり勇気が出る。勇気があるから行動できるのではない。</p><p style="color:var(--text-muted);font-size:13px;margin-top:8px;">— ウィリアム・ジェームス</p></div>
+      <div class="card"><p class="quote-big">夢は逃げない。逃げるはいつも自分だ。</p></div>
+      <div class="card"><p class="quote-big">できるかどうかじゃない。やるかどうかだ。</p></div>
+      <div class="card"><p class="quote-big">始めることが、すべての答えだ。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">考えすぎるより、一歩動いてみる。</p></div>
+      <div class="card"><p class="quote-big">恐れは現実よりも大きく見える。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">やってみると、たいていそうでもない。</p></div>
+      <div class="card"><p class="quote-big">挑戦しなければ、何も変わらない。</p></div>
+      <div class="card"><p class="quote-big">今日の勇気が、明日の自信になる。</p></div>
+      <div class="card"><p class="quote-big">一歩踏み出す勇気が、人生を変える。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">踏み出す前は怖い。でも踏み出した後は、なんでこんなに迷ってたんだろうと思う。</p></div>
+      <div class="card"><p class="quote-big">失敗を恐れるな。失敗しない人は何もしていない人だ。</p></div>
+      <div class="card"><p class="quote-big">やってみなければわからない。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">結果より「やった事実」の方が後から効いてくる。</p></div>
 
-      <div class="card">
-        <p class="quote-big">ダサい生き方はしない。かっこよく生きる。</p>
-        <div class="divider"></div>
-        <p style="font-size:14px;color:var(--text-muted);">何も考えないような人間でありたい。逃げない人でありたい。</p>
-      </div>
+      <!-- 努力・継続 -->
+      <div class="card"><p class="quote-big">千里の道も一歩から。</p></div>
+      <div class="card"><p class="quote-big">継続は力なり。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">続けることそのもは、才能だ。</p></div>
+      <div class="card"><p class="quote-big">小さな積み重ねが大きな差を生む。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">毎日1%ずつ良くなれば、1年後は37倍になってる。</p></div>
+      <div class="card"><p class="quote-big">昨日の自分を超えることだけ考えればいい。</p></div>
+      <div class="card"><p class="quote-big">地道な努力が一番の近道。</p></div>
+      <div class="card"><p class="quote-big">今日の自分は昨日の自分より少しだけ前に進んでいる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">それだけで十分だ。</p></div>
+      <div class="card"><p class="quote-big">諦めた瞬間、それが失敗だ。</p></div>
+      <div class="card"><p class="quotess="quote-big">一日一日を丁寧に生きる。</p></div>
+      <div class="card"><p class="quote-big">できないことを続けるのが練習。できることをやるは作業。</p></div>
+      <div class="card"><p class="quote-big">才能は努力で磨かれる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">才能があっても努力しない人より、努力する人の方が強い。</p></div>
 
-      <div class="card card-accent">
-        <p><strong>江崎くんは運が良い。</strong></p>
-        <p>江崎くん大好き。あきくんは愛されるに値する人間です。</p>
-        <p style="color:var(--text-muted);font-size:13px;">自分を愛するのは自分しかいない。</p>
-      </div>
+      <!-- 失敗・立ち直り -->
+      <div class="card"><p class="quote-big">転んだら、また立ち上がればいい。それだけだ。</p></div>
+      <div class="card"><p class="quote-big">七転び八起き。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">転んだ数より、立ち上がった数の方が多ければいい。</p></div>
+      <div class="card"><p class="quote-big">失敗は成功の種。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">種を蒔かないと、何も生えない。</p></div>
+      <div class="card"><p class="quote-big">傷ついた分だけ、人に優しくなれる。</p></div>
+      <div class="card"><p class="quote-big">どん底は、跳ね上がる場所でもある。</p></div>
+      <div class="card"><p class="quote-big">うまくいかないことがあって当たり前。それが普通。</p></div>
+      <div class="card"><p class="quote-big">やり直せる。何度でも。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">人生にゲームオーバーはない。続けている限り、プレイ中だ。</p></div>
+      <div class="card"><p class="quote-big">結果が出なくても、やってきた時間は消えない。</p></div>
+      <div class="card"><p class="quote-big">折れてめ���がっても、続けることが大事。</p></div>
+      <div class="card"><p class="quote-big">失敗を笑う人に、新しいものは生まれない。</p></div>
 
-      <div class="card">
-        <h2>言い換え</h2>
-        <div class="reframe-item">
-          <span class="reframe-from">傷ついた</span>
-          <span class="reframe-arrow">→</span>
-          <span class="reframe-to">それだけ誠実に向き合ってた証拠</span>
-        </div>
-        <div class="reframe-item">
-          <span class="reframe-from">もうやだ</span>
-          <span class="reframe-arrow">→</span>
-          <span class="reframe-to">一回置いていい</span>
-        </div>
-        <div class="reframe-item">
-          <span class="reframe-from">わからない</span>
-          <span class="reframe-arrow">→</span>
-          <span class="reframe-to">まだわかってないだけ</span>
-        </div>
-        <div class="reframe-item">
-          <span class="reframe-from">詰まった</span>
-          <span class="reframe-arrow">→</span>
-          <span class="reframe-to">考えてる証拠</span>
-        </div>
-        <div class="reframe-item">
-          <span class="reframe-from">先が見えない</span>
-          <span class="reframe-arrow">→</span>
-          <span class="reframe-to">まだ地図を描いてる途中</span>
-        </div>
-      </div>
+      <!-- 自己受容 -->
+      <div class="card"><p class="quote-big">自分を好きになるのが一番難しくて、一番大切なことだ。</p></div>
+      <div class="card"><p class="quote-big">完璧じゃなくていい。続けていることが価値だ。</p></div>
+      <div class="card"><p class="quote-big">自分の機嫌は自分でとる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">誰かに機嫌をとってもらうのを待っていると、一生待ち続けることになる。</p></div>
+      <div class="card"><p class="quote-big">今日は今日でよかった。それだけでいい。</p></div>
+      <div class="card"><p class="quote-big">感情を否定しない。感情はただこにある。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">感情は正しいとか間違いとかじゃない。ただ、感すていいものだ。</p></div>
+      <div class="card"><p class="quote-big">きつい日もある。それが人間だ。</p></div>
+      <div class="card"><p class="quote-big">弱さを認めることが、本当の強さだ。</p></div>
+      <div class="card"><p class="quote-big">焦らなくていい。自分のペースで進めばいい。</p></div>
+      <div class="card"><p class="quote-big">今日も生きた。それだけで十分えらい。</p></div>
+      <div class="card"><p class="quote-big">自分に正直に生きることが、自分を好きになる近道。</p></div>
 
-      <div class="card">
-        <p>「人間だから、そういうこともあるよね」と声に出す。</p>
-        <div class="divider"></div>
-        <p>自分を罰したところで本当の意味の反省にならない。後悔しなくていい。</p>
-        <p><strong>どれだけ悪いことをしてもあなたの人生はあなたが愛するしかない。</strong></p>
-      </div>
+      <!-- 人生哲学 -->
+      <div class="card"><p class="quote-big">今この瞬間に集中することが、最善の選択につながる。</p></div>
+      <div class="card"><p class="quote-big">人生はシンプルだ。複雑にしているのは自分だ。</p></div>
+      <div class="card"><p class="quote-big">何かを手に入れるためには、何かを手放す必要がある。</p></div>
+      <div class="card"><p class="quote-big">過去は変えられない。でも解釈は変えらる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">同じ出来事でも、どう意味づけるかで人生は変わる。</p></div>
+      <div class="card"><p class="quote-big">比べるなら、昨日の自分と比べろ。</p></div>
+      <div class="card"><p class="quote-big">本物は続く。続けるものが本物になる。</p></div>
+      <div class="card"><p class="quote-big">大事なことは案外シンプルンプルだ。</p></div>
+      <div class="card"><p class="quote-big">どこにいるかより、どこに向かっているかが大事。</p></div>
+      <div class="card"><p class="quote-big">意味のある人生は、意味を求める姿勢から始まる。</p></div>
+      <div class="card"><p class="quote-big">人生に答えはない。問いを持ち続けることに意味がある。</p></div>
 
-      <div class="card">
-        <p><strong>不快感と共存する。消そうとするのをやめる。</strong></p>
-        <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">不快な感情を消そうとするほど、その感情は再生産される。</p>
-      </div>
+      <!-- 人間関係・孤独 -->
+      <div class="card"><p class="quote-big">一人でいても孤独ではない。自分と仲良くできれば。</p></div>
+      <div class="card"><p class="quote-big">本当の理解者は少なくていい。一人でもいれば十分だ。</p></div>
+      <div class="card"><p class="quote-big">他人は変えられない。自分だけが変えらる。</p></div>
+      <div class="card"><p class="quote-big">人は人、自分は自分。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">人と比べて落ち込むのは、他人のゲームで勝負しようとしているから。</p></div>
+      <div class="card"><p class="quote-big">わかってもらえなくてもいい。自分がわかっていれば。</p></div>
+      <div class="card"><p class="quote-big">縁がある人とはつながる。ない人とは離れていく。それでいい。</p></div>
+      <div class="card"><p class="quote-big">誰かに頼ることも、強さのひとつだ。</p></div>
+      <div class="card"><p class="quote-big">感謝できる人間でいる。それだけでだいぶ違う。</p></div>
+      <div class="card"><p class="quote-big">本当の孤独は、自分と話せないことだ。</p></div>
+      <div class="card"><p class="quote-big">人に期待しすぎると疲れる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">期待するなら、自分に対してすればいい。</p></div>
 
-      <div class="card">
-        <p><strong>過ぎたことは全て上手く行ったこと。</strong></p>
-        <div class="divider"></div>
-        <p><strong>It's manageable. I'll manage.</strong></p>
-        <p style="color:var(--text-muted);font-size:13px;">なんとかなるし、なんとかする。</p>
-      </div>
+      <!-- 仕事・成長 -->
+      <div class="card"><p class="quote-big">仕事は手段、人生が目的。</p></div>
+      <div class="card"><p class="quote-big">忙しいことと、生産的なことは違う。</p></div>
+      <div class="card"><p class="quote-big">問題は起きる。対処できる自分を作るだけだ。</p></div>
+      <div class="card"><p class="quote-big">苦手なことも、繰り返せば慣れる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">苦手だと思っていることの90%は、慣れていないだけだ。</p></div>
+      <div class="card"><p class="quote-big">結果は後からついてくる。今は過程を信じる。</p></div>
+      <div class="card"><p class="quote-big">一番の敵はやる気が出ないこと。でも、やれば出てくる。</p></div>
+      <div class="card"><p class="quote-big">迷ったら動く。止まっていては何も変わらない。</p></div>
+      <div class="card"><p class="quote-big">うまくなりたければ、下手なうちからやるしかない。</p></div>
+      <div class="card"><p class="quote-big">やりがいは、やり続けた先にある。</p></div>
+      <div class="card"><p class="quote-big">面白いと思える仕事の作り方は、自分次第だ。</p></div>
 
-      <div class="card">
-        <h2>落ち込んだ時の言葉</h2>
-        <div class="q-item">「いい勉強になった」</div>
-        <div class="q-item">「こんなもんで済んで良かった」</div>
-        <div class="q-item">「まあ、いっか」</div>
-        <div class="q-item">「なんとかなる」</div>
-      </div>
+      <!-- ことわざ・格言 -->
+      <div class="card"><p class="quote-big">石の上にも三年。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">続けることで、最初は感じなかったものが見えてくる。</p></div>
+      <div class="card"><p class="quote-big">案ずるより産むが易し。</p></div>
+      <div class="card"><p class="quote-big">雨降って地固まる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">嵐の後の方が、地盤がしっかりする。</p></div>
+      <div class="card"><p class="quote-big">禍を転じて福と為す。</p></div>
+      <div class="card"><p class="quote-big">急がば回れ。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">近道を急ぐより、確実な道を着実に進む方が早い。</p></div>
+      <div class="card"><p class="quote-big">為せば成る、為さねば成らぬ、何事も。</p><p style="color:var(--text-muted);font-size:13px;margin-top:6px;">— 上杉鷹山</p></div>
+      <div class="card"><p class="quote-big">艱難汝を玉にす。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;px;">苦しみが人を磨く。</p></div>
+      <div class="card"><p class="quote-big">習うより慣れろ。</p></div>
+      <div class="card"><p class="quote-big">損して得とれ。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">目先の損より、長期の得を選べ。</p></div>
+      <div class="card"><p class="quote-big">始めよければ終わりよし。</p></div>
 
-      <div class="card card-accent card-center">
-        <p style="font-size:16px;font-weight:600;color:#fff;">江崎あきくんは大丈夫。ほんとに。</p>
-      </div>
+      <!-- 人生で気づいたこと -->
+      <div class="card"><h2>人生で気づいたこと</h2><p class="quote-big">コーヒーは本当にメンタルを回復させる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">科学的にも証明されてるし、自分の経験でもそう。</p></div>
+      <div class="card"><p class="quote-big">体を動かすと、頭の中が静かになる。</p></div>
+      <div class="card"><p class="quote-big">睡眠が全ての基盤。寝不足の日は何もうまくいかない。</p></div>
+      <div class="card"><p class="quote-big">音楽は気分を変える最速の手段。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">好きな曲を聴くだけで、頭の中のノイズが消える。</p></div>
+      <div class="card"><p class="quote-big">場所を変えると思考が変わる。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">5分でも外に出ると、部屋の中では解けなかった問題が解けることがある。</p></div>
+      <div class="card"><p class="quote-big">「めんどくさい」の大半は、始めてみると消える。</p></div>
+      <div class="card"><p class="quote-big">悩んでいる時間より、やっている時間の方が絶対に短い。</p></div>
+      <div class="card"><p class="quote-big">人は思ったより他人に関心がない。自意識過剰は損だ。</p></div>
+      <div class="card"><p class="quote-big">疲れている時の判断は信用できない。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">重要な決断は、休んだ後にする。</p></div>
+      <div class="card"><p class="quote-big">準備が整った時には、もうその時期は過ぎている。やりながら整えるしかない。</p></div>
+      <div class="card"><p class="quote-big">「また今度」は来ない。今日やることが唯一確実なことだ。</p></div>
+      <div class="card"><p class="quote-big">自分が嫌いな自分の部分は、たいてい他人には見えていない。</p></div>
+      <div class="card"><p class="quote-big">嫌なことが続くのは、何かを変えろとうサインだ。</p></div>
+      <div class="card"><p class="quote-big">本当にやりたいことは、「楽しいから」より「気づいたらやってた」で見つかる。</p></div>
+      <div class="card"><p class="quote-big">一番しんどい時期を乗り越えた経験が、次の壁を低く見せる。</p></div>
+
+      <!-- あきへの言葉 -->
+      <div class="card card-accent"><h2>あきへ</h2><p><strong>テクノロジーと音楽が好きなあきくんは、それだけで十分面白い人間だ。</strong></p><p style="color:var(--text-muted);font-size:13px;margin-top:6px;">夜勤をこなしながら英語とギターとコードを学んでいる。そういう人間がここにいる。</p></div>
+      <div class="card"><h2>言い換え・拡張版</h2><div class="reframe-item"><span class="reframe-from">疲れた</span><span class="reframe-arrow">→</span><span class="reframe-to">それだけ動いた証拠、今日は休んでいい</span></div><div class="reframe-item"><span class="reframe-from">怖い</span><span class="reframe-arrow">→</span><span class="reframe-to">大事だと思ってるから怖い、良いサイン</span></div><div class="reframe-item"><span class="reframe-from">うまくできなかった</span><span class="reframe-arrow">→</span><span class="reframe-to">次どうするかわかった、一個解決</span></div><div class="reframe-item"><span class="reframe-from">何もしたくない</span><span class="reframe-arrow">→</span><span class="reframe-to">体が休みたがってる、従っていい</span></div><div class="reframe-item"><span class="reframe-from">自信がない</span><span class="reframe-arrow">→</span><span class="reframe-to">まだ慣れてないだけ、続ければ変わる</span></div>iv><div class="reframe-item"><span class="reframe-from">誰もわかってくれない</span><span class="reframe-arrow">→</span><span class="reframe-to">自分はわかってる、それで十分なこともある</span></div></div>
+      <div class="card card-accent card-center"><p style="font-size:16px;font-weight:600;color:#fff;">江崎あきくんは大丈夫。ほんとに。</p></div>
     </section>
 
     <!-- ===== 希望 ===== -->
@@ -373,56 +231,14 @@
         <h1>希望を保つ自問リスト</h1>
         <p>自分で問いを立てることが、退屈に生きないコツ。</p>
       </div>
-
-      <div class="card">
-        <h2>落ち込んだ時</h2>
-        <div class="q-item"><div class="q-num">Q1</div>1年後も、これを気にしてる？</div>
-        <div class="q-item"><div class="q-num">Q2</div>今まで乗り越えてきたことは何か？（絶対にある）</div>
-        <div class="q-item"><div class="q-num">Q3</div>「この出来事から学べることはなんだろう？」</div>
-        <div class="q-item"><div class="q-num">Q4</div>こんなもんで済んで、よかった。何が残った？</div>
-        <div class="q-item"><div class="q-num">Q5</div>自分がコントロールできることは何か？</div>
-      </div>
-
-      <div class="card">
-        <h2>前向きになりたい時</h2>
-        <div class="q-item"><div class="q-num">Q1</div>「どうしたらできるだろう？」できない理由は考えない。</div>
-        <div class="q-item"><div class="q-num">Q2</div>上手くいく方法を探していれば、うまくいく。—いまどこを探してる？</div>
-        <div class="q-item"><div class="q-num">Q3</div>今できることは何か？</div>
-        <div class="q-item"><div class="q-num">Q4</div>目先の1時間をどうする？</div>
-        <div class="q-item"><div class="q-num">Q5</div>今日これだけはやりたい、というものは？</div>
-      </div>
-
-      <div class="card">
-        <h2>自分を好きになりたい時</h2>
-        <div class="q-item"><div class="q-num">Q1</div>今日、逃げなかった場面はあったか？</div>
-        <div class="q-item"><div class="q-num">Q2</div>1%でもポジティブな行動をとれたか？</div>
-        <div class="q-item"><div class="q-num">Q3</div>「えらいね」と言えるとしたら、今日は何に対して？</div>
-        <div class="q-item"><div class="q-num">Q4</div>あさ、起きれてえらい。それだけで十分かもしれない。</div>
-      </div>
-
-      <div class="card">
-        <h2>人生全体を見たい時</h2>
-        <div class="q-item"><div class="q-num">Q1</div>自分がやりたいことではなく、人生が僕に何を望んでいるか？</div>
-        <div class="q-item"><div class="q-num">Q2</div>自分の長所がピッタリはまる環境にいるか？</div>
-        <div class="q-item"><div class="q-num">Q3</div>ダサい生き方をしていないか？</div>
-        <div class="q-item"><div class="q-num">Q4</div>何かに追われている感覚はあるか？（なければ何かを始めよう）</div>
-        <div class="q-item"><div class="q-num">Q5</div>意味のある人生を生きているか？今日、一つでも。</div>
-      </div>
-
-      <div class="card">
-        <h2>詰まった時・決断できない時</h2>
-        <div class="q-item"><div class="q-num">Q1</div>最悪の状態は何か？→ それで人生終わりか？</div>
-        <div class="q-item"><div class="q-num">Q2</div>常にベストじゃなくてベターでいい。2〜3択のうちどれか？</div>
-        <div class="q-item"><div class="q-num">Q3</div>本質はなんだ？シンプルにできないか？</div>
-        <div class="q-item"><div class="q-num">Q4</div>今日はやらない、後回しにすることは何か？</div>
-      </div>
-
-      <div class="card card-accent">
-        <h2>毎朝・毎晩</h2>
-        <div class="q-item">（朝）今日、目先の1時間をどうする？</div>
-        <div class="q-item">（夜）今日、何か一つでも前に進めたか？</div>
-        <div class="q-item">（いつでも）今、ここで、できることは何か？</div>
-      </div>
+      <div class="card"><h2>落ち込んだ時</h2><div class="q-item"><div class="q-num">Q1</div>1年後も、これを気にしてる？</div><div class="q-item"><div class="q-num">Q2</div>今まで乗り越えてきたことは何か？（絶対にある）</div><div class="q-item"><div class="q-num">Q3</div>「この出来事から学べることはなんだろう？」</div><div class="q-item"><div class="q-num">Q4</div>こんなもんで済んで、よかった。何が残った？</div><div class="q-item"><div class="q-num">Q5</div>自分がコントロールできることは何か？</div></div>
+      <div class="card"><h2>前向きになりたい時</h2><div class="q-item"><div class="q-num">Q1</div>「どうしたらできるだろう？」できない理由は考えない。</div><div class="q-item"><div class="q-num">Q2</div>上手くいく方法を探していれば、うまくいく。—いまどこを探してる？</div><div class="q-item"><div class="q-num">Q3</div>今できることは何か？</div><div class="q-item"><div class="q-num">Q4</div>目先の1時間をどうする？</div><div class="q-item"><div class="q-num">Q5</div>今日これだけはやりたい、というものは？</div></div>
+      <div class="card"><h2>自分を好きになりたい時</h2><div class="q-item"><div class="q-num">Q1</div>今日、逃げなかった場面はあったか？</div><div class="q-item"><div class="q-num">Q2</div>1%でもポジティブな行動をとれたか？</div><div class="q-item"><div class="q-num">Q3</div>「えらいね」と言えるとしたら、今日は何に対して？</div><div class="q-item"><div class="q-num">Q4</div>朝、起きれてえらい。それだけで十分かもしれない。</div></div>
+      <div class="card"><h2>人生全体を見たい時</h2><div class="q-item"><div class="q-num">Q1</div>自分がやりたいことではなく、人生が僕に何を望んでいるか？</div><div class="q-item"><div class="q-num">Q2</div>自分の長所がピッタリはまる環境にいるか？</div><div class="q-item"><div class="q-num">Q3</div>ダサい生き方をしていないか？</div><div class="q-item"><div class="q-num">Q4</div>何かに追われている感覚はあるか？（なければ何かを始めよう）</div><div class="q-item"><div class="q-num">Q5</div>意味のある人生を生きているか？今日、一つでも。</div></div>
+      <div class="card"><h2>詰まった時・決断できない時</h2><div class="q-item"><div class="q-num">Q1</div>最悪の状態は何か？→ それで人生終わりか？</div><div class="q-item"><div class="q-num">Q2</div>常にベストじゃなくてベターでいい。2〜3択のうちどれか？</div><div class="q-item"><div class="q-num">Q3</div>本質はなんだ？シンプルにできないか？</div><div class="q-item"><div class="q-num">Q4</div>今日はやらない、後回しにすることは何か？</div></div>
+      <div class="card"><h2>夜、眠れない時</h2><div class="q-item"><div class="q-num">Q1</div>今日、何かひとつでも前に進んだことはあるか？</div><div class="q-item"><div class="q-num">Q2</div>明日、朝一番にやりたいことは何か？</div><div class="q-item"><div class="q-num">Q3</div>今日感謝できることを3つ� x�d����j8�e��g��{�'��]��]��\��H�KZ][H��]��\��H�K[�[H��M�]��/d��k��*��j��j��h��i��a8��� ��gx�8�h8�dx�i�࠹c`yb!�/$x���i��a8��� ��]���]���]��\��H��\�����*�8�b��j�`���i8�a8�g��`����]��\��H�KZ][H��]��\��H�K[�[H��LO�]����9�b��k�* :$bx�k�� y��9�b��k�⭹�b�ह�(8�e��i��a8��� �!�b!��k�/�y`)8�j8�k�b)x�h8� ��]��]��\��H�KZ][H��]��\��H�K[�[H��L��]���d��k�.��स�#9ab9�'��#x�j��fx���b�� x�#9c�zgh��fyn*��#x�j��fx���b��k�!�b!�が決める。</div><div class="q-item"><div class="q-num">Q3</div>傷ついたということは、それだけ真剣に向き合っていた証拠だ。</div><div class="q-item"><div class="q-num">Q4</div>1週間後、この出来事は自分の人生にどんな意味を持つだろう？</div></div>
+      <div class="card card-accent"><h2>毎朝・毎晩</h2><div class="q-item">（朝）今日、目先の1時間をどうする？</div><div class="q-item">（夜）今日、何か一つでも前に進めたか？</div><div class="q-item">（いつでも）今、ここで、できることは何か？</div></div>
+      <div class="card"><h2>将来が不安な時</h2><div class="q-item"><div class="q-num">Q1</div>今日できる最善のことをすれば、それ以上できることはない。</div><div class="q-item"><div class="q-num">Q2</div>不安は未来の心配。でも動けるはは今だけ。</div><div class="q-item"><div class="q-num">Q3</div>最悪の場合を具体的に考えると、案外たいしたことじゃない。</div><div class="q-item"><div class="q-num">Q4</div>今の自分は、3年前の自分より絶対に成長してる。</div></div>
     </section>
 
     <!-- ===== ピンチ ===== -->
@@ -431,63 +247,16 @@
         <h1>ピンチの時に読む</h1>
         <p>きつい時こそ、これ。</p>
       </div>
-
-      <div class="card">
-        <p class="quote-big">全ては「テスト」である。失敗はデータ。</p>
-        <div class="divider"></div>
-        <p style="color:var(--text-muted);font-size:14px;">正解はない、最適解を探すだけ。</p>
-      </div>
-
-      <div class="card card-accent">
-        <p class="quote-big">「どうしたらできるだろう？」</p>
-        <div class="divider"></div>
-        <p>できない理由は考えない。できる理由だけを考える。</p>
-        <p style="font-size:14px;color:var(--text-muted);">上手くいく方法を探していれば、うまくいく。</p>
-      </div>
-
-      <div class="card">
-        <p class="quote-big">ギターを弾く親指のように、痛みを伴ってでも強くなりたい。</p>
-        <div class="divider"></div>
-        <p style="color:var(--text-muted);font-size:13px;">指がジンジン痛いから硬くなって強くなる。それが成長ってこと。</p>
-      </div>
-
-      <div class="card">
-        <p><strong>メンタルがダウンした時は「逆境力」を鍛えるチャンスと捉える。</strong></p>
-      </div>
-
-      <div class="card">
-        <h2>言い換え</h2>
-        <div class="reframe-item">
-          <span class="reframe-from">バカにされた</span>
-          <span class="reframe-arrow">→</span>
-          <span class="reframe-to">相手の器がそこまでだっただけ</span>
-        </div>
-        <div class="reframe-item">
-          <span class="reframe-from">雑に扱われた</span>
-          <span class="reframe-arrow">→</span>
-          <span class="reframe-to">自分の価値とは関係ない</span>
-        </div>
-        <div class="reframe-item">
-          <span class="reframe-from">腹立つ</span>
-          <span class="reframe-arrow">→</span>
-          <span class="reframe-to">自分はちゃんと感じられてる、感覚正常</span>
-        </div>
-      </div>
-
-      <div class="card">
-        <p class="quote-big">進んでも死、止まっても死なら、自分の道を進む。</p>
-      </div>
-
-      <div class="card">
-        <p>こんなもんで済んで良かった。1年後も気にしてる？まあ、いっか。</p>
-        <div class="divider"></div>
-        <p><strong>過ぎたことは全て上手く行ったこと。</strong></p>
-        <p><strong>It's manageable. I'll manage.</strong></p>
-      </div>
-
-      <div class="card card-accent card-center">
-        <p style="font-size:17px;font-weight:700;color:#fff;">ダサい生き方はしない。かっこよく生きる。</p>
-      </div>
+      <div class="card"><p class="quote-big">全ては「テスト」である。失敗はデータ。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:14px;">正解はない、最適解を探すだけ。</p></div>
+      <div class="card card-accent"><p class="quote-big">「どうしたらできるだろう？」</p><div class="divider"></div><p>できない理由は考えない。できる理由だけを考える。</p><p style="font-size:14px;color:var(--text-muted);">上手くいく方法を探していれば、うまくいく。</p></div>
+      <div class="card"><p class="quote-big">ギターを弾く親指のように、痛みを伴ってでも強くなりたい。</p><div class="divider"></div><p style="color:var(--text-muted);font-size:13px;">指がジンジン痛いから硬くなって強くなる。そが成長ってこと。</p></div>
+      <div class="card"><p><strong>メンタルがダウンした時は「逆境力」を鍛えるチャンスと捉える。</strong></p></div>
+      <div class="card"><h2>ピンチの時の言い換え</h2><div class="reframe-item"><span class="reframe-from">バカにされた</span><span class="reframe-arrow">→</span><span class="reframe-to">相手の器がそこまでだっただけ</span></div><div class="reframe-item"><span class="reframe-from">雑に扱われた</span><span class="reframe-arrow">→</span><span class="reframe-to">自分の価値とは関係ない</span></div><div class="reframe-item"><span class="reframe-from">腹立つ</span><span class="reframe-arrow">→</span><span class="reframe-to">自分はちゃんと感じられてる、感覚正常</span></div><div class="reframe-item"><span class="reframe-from">もうだめだ</span><span class="reframe-arrow">→</span><span class="reframe-to">今が底。ここから上がるだけ</span></div><div class="reframe-item"><span class="reframe-from">逃げたい</span><span class="reframe-arrow">→</span><span class="reframe-to">一旦置いておく。リセットしてから戻る</span></div></div>
+      <div class="card"><p class="quote-big">進んでも死、止まっても死なら、自分の道を進む。</p></div>
+      <div class="card"><p>こんなもんで済んで良かった。1年後も気にしてる？みあ、いっか。</p><div class="divider"></div><p><strong>過ぎたことは全て上手く行ったこと。</strong></p><p><strong>It's manageable. I'll manage.</strong></p></div>
+      <div class="card"><h2>ピンチ時の即効アクション</h2><div class="priority-item"><span class="priority-num">1</span><div class="priority-text"><h3>深呼吸3回</h3><p>まず体を落ち着かせる。息が整えば頭も整う。</p></div></div><div class="priority-item"><span class="priority-num">2</span><div class="priority-text"><h3>水かコーヒーを飲む</h3><p>口と手を動かす。物理的に状況を変える。</p></div></div><div class="priority-item"><span class="priority-num">3</span><div class="priority-text"><h3>問題を紙に書く</h3><p>頭の中中に入れたまま考えると大きく見える。書き出すと小さくなる。</p></div></div><div class="priority-item"><span class="priority-num">4</span><div class="priority-text"><h3>今できる1つだけやる</h3><p>全部解決しようとしない。1つだけ。</p></div></div></div>
+      <div class="card"><p class="quote-big">この局面を乗り越えたら、必ず「あの時はきつかった」と笑える。</p></div>
+      <div class="card card-accent card-center"><p style="font-size:17px;font-weight:700;color:#fff;">ダサえ生き方はしない。かっこよく生きる。</p></div>
     </section>
 
     <!-- ===== 夜勤 ===== -->
@@ -496,56 +265,13 @@
         <h1>夜勤の休憩</h1>
         <p>今すぐやること。</p>
       </div>
-
-      <div class="card card-accent">
-        <p style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px;letter-spacing:0.05em;">仕事嫌だなって気持ち？</p>
-        <p class="quote-big">コーヒーを飲めば治る。</p>
-        <div class="divider"></div>
-        <p>朝は洗面台からお湯をドバドバ出す。</p>
-        <p style="color:var(--text-muted);font-size:13px;">それだけで変わる。本当に。ずっとそうだった。</p>
-      </div>
-
-      <div class="card">
-        <h2>優先順位</h2>
-        <div class="priority-item">
-          <span class="priority-num">1</span>
-          <div class="priority-text">
-            <h3>仮眠</h3>
-            <p>わずかでも寝るだけで全然違う</p>
-          </div>
-        </div>
-        <div class="priority-item">
-          <span class="priority-num">2</span>
-          <div class="priority-text">
-            <h3>ストレッチ</h3>
-            <p>体をほぐしてリセット</p>
-          </div>
-        </div>
-        <div class="priority-item">
-          <span class="priority-num">3</span>
-          <div class="priority-text">
-            <h3>食事</h3>
-            <p>作業しながらでいい、後回しでいい</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <p>疲れる前に休んだ方が適切に休める。</p>
-        <div class="divider"></div>
-        <p>疲れたら、ストレス発散より、慰めより、<strong>すぐに休む</strong>。</p>
-        <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">ストレス発散しようとしても疲れているうちは上手くいかない。</p>
-      </div>
-
-      <div class="card">
-        <p><strong>仮眠中でも有意義なことはできる。</strong></p>
-        <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">仮眠 → 頭がリセットされる → 作業の質が上がる。</p>
-        <p style="color:var(--text-muted);font-size:13px;">眠れなくてもいい、横になるだけでいい。</p>
-      </div>
-
-      <div class="card card-center">
-        <p style="color:var(--text-muted);font-size:14px;">シングルタスクがベスト。今夜も大丈夫。</p>
-      </div>
+      <div class="card card-accent"><p style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px;letter-spacing:0.05em;">仕事嫌だなって気持ち？</p><p class="quote-big">コーヒーを飲めば治る。</p><div class="divider"></div><p>朝は洗面台からお湯をドバドバ出す。</p><p style="color:var(--text-muted);font-size:13px;">それだけで変わる。本当に。ずっとそうだった。</p></div>
+      <div class="card"><h2>優先順位</h2><div class="priority-item"><span class="priority-num">1</span><div class="priority-text"><h3>仮眠</h3><p>わずかでも寝るだけで全然違う</p></div></div><div class="priority-item"><span class="priority-num">2</span><div class="priority-text"><h3>ストレッチ</h3><p>体をほぐしてリセット</p></div></div><div class="priority-item"><span class="priority-num">3</span><div class="priority-text"><h3>食事</h3><p>作業しながらでいい、後回しでいい</p></div></div></div>
+      <div class="card"><p>疲れる前に休んだ方が適切に休める。</p><div class="divider"></div><p>疲れたら、ストレス発散より、慰めより、<strong>すぐに休む</strong>。</p><p style="color:var(--text-muted);font-size:13px;margin-top:6px;">ストレス発散しようとしても疲れているうちは上手くいかない。</p></div>
+      <div class="card"><p><strong>仮眠中でも有意義なことはできる。</strong></p><p style="color:var(--text-muted);font-size:13px;margin-top:6px;">仮眠 → 頭がリセットされる → 作業の質が上がる。</p><p style="color:var(--text-muted);font-size:13px;">眠れなくてもいい、横になるだけでいい。</p></div>
+      <div class="card"><h2>夜勤中の気持ちの保ち方</h2><div class="q-item">今夜の終わりに飲むコーヒーを楽しみにする</div><div class="q-item">シングルタスク。今の業務だけに集中</div><div class="q-item">「夜勤に来てる自分、えらい」を3回心の中で言う</div><div class="q-item">夜明けが来たら「やり切った」と思う権利がある</div></div>
+      <div class="card"><h2>体が限界サインの時</h2><div class="q-item"><div class="q-num">サイン</div>ミスが増えた・同じことを何度も確認している</div><div class="q-item"><div class="q-num">対処</div>5分でもいい、椅子を倒して目を閉じる</div><div class="q-item"><div class="q-num">サイン</div>イライラが収まらない</div><div class="q-item"><div class="q-num">対処</div>お湯を飲む、深呼吸、廊下を歩く</div><div class="q-item"><div class="q-num">サイン</div>何も考えられない・頭が真っ白</div><div class="q-item"><div class="q-num">対処</div>今日はそれでいい。最低限だけやる日と決める</div></div>
+      <div class="card card-center"><p style="color:var(--text-muted);font-size:14px;">シングルタスクがベスト。今夜も大丈夫。</p></div>
     </section>
 
     <!-- ===== 褒め ===== -->
@@ -554,123 +280,74 @@
         <h1>江崎あきくんのすごいところ全部</h1>
         <p>証拠つきで。</p>
       </div>
+      <div class="card card-accent card-center"><p style="font-size:20px;font-weight:700;color:#fff;">江崎くんは運が良い。</p><p style="color:var(--text-muted);margin-top:6px;font-size:13px;">それだけじゃない。</p></div>
+      <div class="card"><h2>夜勤をやってるだけで偉い</h2><p>夜中に一人で働いている。普通の人よりはるかにきつい環境で、逃げずに立ち向かってる。</p><p>しかも休憩のとり方とか、メンタルの保ち方とかをちゃんと考えながら。</p><p><strong>偉い。本当に偉い。</strong></p></div>
+      <div class="card"><h2>ギターを弾いてる</h2><p>ギターを弾く親指が痛くなっても続けてる人だ。</p><p>痛みを伴ってでも強くなりたいと思える人間だ。<strong>そういう人間だ、あきくんは。</strong></p></div>
+      <div class="card"><h2>英語の勉強をしてる</h2><p>英語の歌詞を追いながら音楽を聴えてる。そういう工夫が自然とできる人間だ。</p><p>留学のことを本気で考えてる。<strong>かっこいい。ほんとに。</strong></p></div>
+      <div class="card"><h2>テクノロジーの勉強が好き</h2><p>「テクノロジーの勉強をすると落ち着く」という人間がここにいる。</p><p>それだけで十分ユニークで、十分尖ってる。</p></div>
+      <div class="card"><h2>このノートを作ってる</h2><p>自分の思考をGitHubで管理しようとしてる人間が何人いると思う？</p><p>原理原則をリストにして、アファメーションを整理して、言い換えリストを作って。</p><p><strong>自分を知ろうとしてる。変わろうとしてる。それだけでもう全然違う。</strong></p></div>
+      <div class="card"><h2>逃げてない</h2><p>「逃げない人でありたい」と書いた。</p><p>そして実際に逃げてない。夜勤に行ってる。勉強してる。このノートを書いてる。</p><p><strong>言葉と行動が一致してる人間だ。</strong></p></div>
+      <div class="card"><p><strong>ダサい生き方をしていない。かっこよく生きている。</strong></p></div>
+      <div class="card"><h2>自分を愛そうとしてる</h2><p>「自分を愛するのは自分しかいない」ってわかってる。しかも愛し方を練習してる。</p><p>それが一番難しいことだ。そをやろうとしてるだけで、もうすごい。</p></div>
+      <div class="card"><h2>好奇心がある</h2><p>新しいことを学ぶのが好きで、テクノロジーや音楽への興味が尽きない。</p><p>好奇心は若さだ。あきくんは若い。<strong>ずっとそうでいてほ何くい。</strong></p></div>
+      <div class="card"><h2>考える力がある</h2><p>自分の経験を「学び」に変換できる。</p><p>「いい勉強になった」「こんなもんで済んでよかった」とう言葉が出てくる人間は、成長し続ける。</p></div>
+      <div class="card card-accent"><p style="text-align:center;font-size:17px;font-weight:700;color:#fff;">江崎あきくんは愛されるに値する人間です。</p><p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:6px;">その証拠はこのページに全部書いてある。</p></div>
+      <div class="card card-center"><p style="font-size:16px;font-weight:500;color:#fff;">江崎あきくん、マジでいい奴だよ。</p><p style="font-size:13px;color:var(--text-muted);margin-top:4px;">ほんとに。</p></div>
+    </section>
 
-      <div class="card card-accent card-center">
-        <p style="font-size:20px;font-weight:700;color:#fff;">江崎くんは運が良い。</p>
-        <p style="color:var(--text-muted);margin-top:6px;font-size:13px;">それだけじゃない。</p>
-      </div>
-
-      <div class="card">
-        <h2>夜勤をやってるだけで偉い</h2>
-        <p>夜中に一人で働いている。普通の人よりはるかにきつい環境で、逃げずに立ち向かってる。</p>
-        <p>しかも休憩のとり方とか、メンタルの保ち方とかをちゃんと考えながら。</p>
-        <p><strong>偉い。本当に偉い。</strong></p>
-      </div>
-
-      <div class="card">
-        <h2>ギターを弾いてる</h2>
-        <p>ギターを弾く親指が痛くなっても続けてる人だ。</p>
-        <p>痛みを伴ってでも強くなりたいと思える人間だ。<strong>そういう人間だ、あきくんは。</strong></p>
-      </div>
-
-      <div class="card">
-        <h2>英語の勉強をしてる</h2>
-        <p>英語の歌詞を追いながら音楽を聴いてる。そういう工夫が自然とできる人間だ。</p>
-        <p>留学のことを本気で考えてる。<strong>かっこいい。ほんとに。</strong></p>
-      </div>
-
-      <div class="card">
-        <h2>テクノロジーの勉強が好き</h2>
-        <p>「テクノロジーの勉強をすると落ち着く」という人間がここにいる。</p>
-        <p>それだけで十分ユニークで、十分尖ってる。</p>
-      </div>
-
-      <div class="card">
-        <h2>このノートを作ってる</h2>
-        <p>自分の思考をGitHubで管理しようとしてる人間が何人いると思う？</p>
-        <p>原理原則をリストにして、アファメーションを整理して、言い換えリストを作って。</p>
-        <p><strong>自分を知ろうとしてる。変わろうとしてる。それだけでもう全然違う。</strong></p>
-      </div>
-
-      <div class="card">
-        <h2>逃げてない</h2>
-        <p>「逃げない人でありたい」と書いた。</p>
-        <p>そして実際に逃げてない。夜勤に行ってる。勉強してる。このノートを書いてる。</p>
-        <p><strong>言葉と行動が一致してる人間だ。</strong></p>
-      </div>
-
-      <div class="card">
-        <p><strong>ダサい生き方をしていない。かっこよく生きている。</strong></p>
-      </div>
-
-      <div class="card">
-        <h2>自分を愛そうとしてる</h2>
-        <p>「自分を愛するのは自分しかいない」ってわかってる。しかも愛し方を練習してる。</p>
-        <p>それが一番難しいことだ。それをやろうとしてるだけで、もうすごい。</p>
+    <!-- ===== 状態チェック ===== -->
+    <section class="section" id="sec-state">
+      <div class="section-header">
+        <h1>最悪の状態スコア</h1>
+        <p>数字で把握して、早めに対処する。</p>
       </div>
 
       <div class="card card-accent">
-        <p style="text-align:center;font-size:17px;font-weight:700;color:#fff;">江崎あきくんは愛されるに値する人間です。</p>
-        <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:6px;">その証拠はこのページに全部書いてある。</p>
+        <h2>今の自分を採点する（0〜10点）</h2>
+        <div class="score-row"><span class="score-label">😴 睡眠</span><span class="score-scale">0=全く寝れず ／ 10=ぐっすり</span><span class="score-num">/10</span></div>
+        <div class="score-row"><span class="score-label">🍚 食事</span><span class="score-scale">0=何も食べてない ／ 10=バッチリ</span><span class="score-num">/10</span></div>
+        <div class="score-row"><span class="score-label">🫀 体調</span><span class="score-scale">0=最悪 ／ 10=絶好調</span><span class="score-num">/10</span></div>
+        <div class="score-row"><span class="score-label">💭 気分</span><span class="score-scale">0=どん底 ／ 10=最高</span><span class="score-num">/10</span></div>
+        <div class="score-row"><span class="score-label">🔥 意欲</span><span class="score-scale">0=全くない ／ 10=めちゃくちゃある</span><span class="score-num">/10</span></div>
+        <div class="sc"score-row"><span class="score-label">🤝 つながり</span><span class="score-scale">0=完全孤立 ／ 10=十分つながってる</span><span class="score-num">/10</span></div>
+        <div class="divider"></div>
+        <p style="font-size:14px;color:var(--text-muted);">合計スコア：<strong style="color:#fff;font-size:18px;">　／60点</strong></p>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:6px;">50〜60点 → OK　　30〜49点 → 注意　　0〜29点 → 休息最優先</p>
       </div>
 
-      <div class="card card-center">
-        <p style="font-size:16px;font-weight:500;color:#fff;">江崎あきくん、マジでいい奴だよ。</p>
-        <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">ほんとに。</p>
+      <div class="card">
+        <h2>最悪状態のサイン（3つ以上 → 今日は休む日）</h2>
+        <div class="warn-item"><span class="warn-check">□</span><span>睡眠3時間以下が2日以上続いている</span></div>
+        <div class="warn-item"><span class="warn-check">□</span><span>食事を2回以上抜いた</span></div>
+        <div class="warn-item"><span class="warn-check">□</span><span>消えたい・いなくなりたい気持ちがある</span></div>
+        <div class="warn-item"><span class="warn-check">□</span><span>誰とも話せない・話せない</span></div>
+        <div class="warn-item"><span class="warn-check">□</span><span>趣味（音楽・テクノロジー）に全く興味がわかない</span></div>
+        <div class="warn-item"><span class="warn-check">□</span><span>ミスが増えた・集中できない</span></div>
+        <div class="warn-item"><span class="warn-check">□</span><span>イライラが収まらない・些細なことで怒れる</span></div>
+        <div class="warn-item"><span class="warn-check">□</span><span>未来が全く見えない感覚がある</span></div>
+        <div class="warn-item"><span class="warn-check">□</span><span>「もうどうカでもなれ」と思ってる</span></div>
       </div>
-    </section>
 
-  </main>
+      <div class="card">
+        <h2>スコア別の対応</h2>
+        <div class="priority-item"><span class="priority-num" style="color:#e53e3e;font-size:20px;">0〜29</span><div class="priority-text"><h3>休息最優先</h3><p>今すぐ横になる。仕事以外は全部後回し。誰かに話すか、このページを読む。</p></div></div>
+        <div class="priority-item"><span class="priority-num" style="color:#e8a020;font-size:20px;">30〜49</span><div class="priority-text"><h3>ゆっくり動く</h3><p>コーヒー・ストレッチ・お湯から始める。無理して走らない。</p></div></div>
+        <div class="priority-item"><span class="priority-num" style="color:#48bb78;font-size:20px;">50〜60</span><div class="priority-text"><h3>OK、普通にいける</h3><p>今日はちゃんとできる日。一つずつやっていこう。</p></div></div>
+      </div>
 
-  <nav>
-    <div class="tab active" onclick="go('meigen',this)">
-      <div class="tab-icon">💬</div>
-      <div class="tab-label">名言</div>
-    </div>
-    <div class="tab" onclick="go('kibou',this)">
-      <div class="tab-icon">🌅</div>
-      <div class="tab-label">希望</div>
-    </div>
-    <div class="tab" onclick="go('pinch',this)">
-      <div class="tab-icon">⚡</div>
-      <div class="tab-label">ピンチ</div>
-    </div>
-    <div class="tab" onclick="go('yakin',this)">
-      <div class="tab-icon">🌙</div>
-      <div class="tab-label">夜勤</div>
-    </div>
-    <div class="tab" onclick="go('home',this)">
-      <div class="tab-icon">✨</div>
-      <div class="tab-label">褒め</div>
-    </div>
-  </nav>
-</div>
+      <div class="card card-accent">
+        <h2>あきの回復ルーティン（最悪状態の時）</h2>
+        <div class="priority-item"><span class="priority-num">1</span><div class="priority-text"><h3>コーヒーを飲む ☕</h3><p>洗面台からお湯をドバドバ出す。体を温める。これだけでかなり変わる。</p></div></div>
+        <div class="priority-item"><span class="priority-num">2</span><div class="priority-text"><h3>横になる（20分でいい）</h3><p>眠れなくていい。目を閉じるだけでも脳が休まる。</p></div></div>
+        <div class="priority-item"><span class="priority-num">3</span><div class="priority-text"><h3>ストレッチ5分</h3><p>体を動かすと気分が変わる。これは本当、夜勤でも証明済み。</p></div></div>
+        <div class="priority-item"><span class="priority-num">4</span><div class="priority-text"><h3>好きな音楽をかける</h3><p>頭の中のノイズを音楽で上書きする。歌詞を追うと余計なことを考えなくなる。</p></div></div>
+        <div class="priority-item"><span class="priority-num">5</span><div class="priority-text"><h3>外の空気を吸う</h3><p>5分でいい。場所を変えると思考が変わる。</p></div></div>
+      </div>
 
-<script>
-function go(id, el) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('sec-' + id).classList.add('active');
-  el.classList.add('active');
-  document.getElementById('main').scrollTop = 0;
-}
-
-function shuffleMeigen() {
-  const sec = document.getElementById('sec-meigen');
-  const cards = Array.from(sec.querySelectorAll('.card'));
-  cards.forEach(c => { c.style.display = 'none'; });
-  const pick = cards[Math.floor(Math.random() * cards.length)];
-  pick.style.display = '';
-  sec.classList.add('shuffled');
-  document.getElementById('main').scrollTop = 0;
-}
-
-function showAllMeigen() {
-  const sec = document.getElementById('sec-meigen');
-  sec.querySelectorAll('.card').forEach(c => { c.style.display = ''; });
-  sec.classList.remove('shuffled');
-  document.getElementById('main').scrollTop = 0;
-}
-</script>
-</body>
-</html>
+      <div class="card">
+        <h2>あきの「最悪は定義」</h2>
+        <div class="q-item"><div class="q-num">定義</div>眠れない ＋ 食べられない ＋ 誰とも話せない が同時に起きたら → 完全に休む</div>
+        <div class="q-item"><div class="q-num">基準</div>2つなら、まだ踏ん張れる。1つなら、対処できる。</div>
+        <div class="q-item"><div class="q-num">頻度</div>「最悪�9����j���x�#x�k��"8�j̸�'�f��j��y�k�`&�� ��㹥�y����c��k��k��x�8���� ��]���]��\��H�KZ][H��]��\��H�K[�[H��*&:c,��]��.⹥�x�k��x��ਸऌ8�'L8�k��l9ke�. 8�i8�i�)���b8�i��b��c�� ��*9��x�8ࢺj�8�a8�b�/c��a8�b�� x�gx�8�h8�dy论*�x� ��]����]����]��\��H��\�������%�b!��k��l9ke�*&:c,��"9�㹥�Lyf��"O�����[OH��۝\�^�N�M�X\��[�X���N�L�ȏ�.⹥�x�k��%�b!�ऌ8�'L8�k�. 8�i8�k��l9ke��i�(j8�fx� �*&:c,��fx���h8�dx�i���� ����]��\��H�KZ][H��]��\��H�K[�[H��8�'��]���b��j�ࢸ�cx�i8�a9��x� �/$x�8� �*�8�b��j�*lx�fx� �.⹥�x�k�� 9/c�fd8�h8�dx� ��]���]��\��H�KZ][H��]��\��H�K[�[H��8�'
+��]���o��`��o��`��k���x� ��(y�!��e��j��a8� ��i��cx���d��j8�h8�dx�8��� ��]���]��\��H�KZ][H��]��\��H�K[�[H����'L�]���a8�a9��x� ��d��k��'�)��ऺ)���b8�i��b��c�� �/ex�c:`ex�h��g��'��]���]��\��H�]�Y\����]����[OH��۝\�^�N�L����܎��\�K]^[]]Y
+Nȏ��l9��y����dx���j8� z!�b!��k���x����8����c:)���b8�i��c���� ��gx�8�h8�dx�i�k�a��c9��x�c��j���� �����]����]��\��H��\������!�b!��j�ec��a��"9� 9����j��`��n��j{�"O����]��\��H�KZ][H��]��\��H�K[�[H��LO�]��.��k�⭹�b��k�� y�hy�(8���h��.�����`b�b�x�k��jx�8�b��i�*�9�#��i��cx���b��'��]���]��\��H�KZ][H��]��\��H�K[�[H��L��]���d��k��%�� x�hx�k��#9.⹥�zfd9k���#x�b��#8�f��h��j8�d��a��b��#{�'��"8�g��a8�i��a9.⹥�zfd9k���"O�]���]��\��H�KZ][H��]��\��H�K[�[H��L��]���*9��x�j9��8�nx�i�/ex�c:`ex�a��'�/ex�b��l��j8�i8�i�࠺`ex�a��k��f��h8� ��]���]��\��H�KZ][H��]��\��H�K[�[H��M�]��.��fx�d8�i��cx���#9/d��j�"k��a8�d��j8�#x�k�/ex�b��'��"9�-8ऺh��8� y�*��j��j����h8�dx�i�࠸�a8�a;�"O�]���]��\��H�KZ][H��]��\��H�K[�[H��MO�]���d��k�⭹�b�ऌL8�k��ay����j:(j8�e��i��`�8n8������F�c���F�cࠢ�F�b6�73�&6&B6&B�66V�B6&B�6V�FW"#��7G��S�&f��B�6��S����f��B�vV�v�C�s�6���#�6ffc�#�i�h*�8�iz^8(.8[�^8�{X.8(�8(�8#����7G��S�&6���#�f"���FW�B��WFVB��f��B�6��S�7���&v���F�����#�K��iz^8�i�K��x+�8�8i��iz^8�Y��k�nx+�8).K��8.8�8N8#�'#�k�[H�8.8�8�8)>8�ZJ~K��ZJ�8#�����F�c���6V7F���ࠢ�����ࠢ��c��F�b6�73�'F"7F�fR"��6Ɩ6��&v�v�V�vV�r�F��2�#��F�b6�73�'F"֖6��#�	�*���F�c��F�b6�73�'F"��&V�#�Yފ���F�c���F�c��F�b6�73�'F""��6Ɩ6��&v�v��&�Rr�F��2�#��F�b6�73�'F"֖6��#�	��S��F�c��F�b6�73�'F"��&V�#�[��iɳ��F�c���F�c��F�b6�73�'F""��6Ɩ6��&v�w��6�r�F��2�#��F�b6�73�'F"֖6��#�)���F�c��F�b6�73�'F"��&V�#�89N8;>88��F�c���F�c��F�b6�73�'F""��6Ɩ6��&v�w����r�F��2�#��F�b6�73�'F"֖6��#�	�ɓ��F�c��F�b6�73�'F"��&V�#�ZI�X�C��F�c���F�c��F�b6�73�'F""��6Ɩ6��&v�v���Rr�F��2�#��F�b6�73�'F"֖6��#�)ʃ��F�c��F�b6�73�'F"��&V�#�I.8(��F�c���F�c��F�b6�73�'F""��6Ɩ6��&v�w7FFRr�F��2�#��F�b6�73�'F"֖6��#�	�8���F�c��F�b6�73�'F"��&V�#�x�nhX���F�c���F�c����c���F�cࠣ�67&�C�gV�7F���v�B�V��F�7V�V�B�VW'�6V�V7F�$�r�6V7F���r��f�$V6��2��2�6�74Ɨ7B�&V��fR�v7F�fRr����F�7V�V�B�VW'�6V�V7F�$�r�F"r��f�$V6��B��B�6�74Ɨ7B�&V��fR�v7F�fRr����F�7V�V�B�vWDV�V�V�D'��B�w6V2�r��B��6�74Ɨ7B�FB�v7F�fRr���V��6�74Ɨ7B�FB�v7F�fRr���F�7V�V�B�vWDV�V�V�D'��B�v���r��67&���F����ЦgV�7F���6�Vff�T�V�vVₒ��6��7B6V2�F�7V�V�B�vWDV�V�V�D'��B�w6V2��V�vV�r���6��7B6&G2�'&��g&�҇6V2�VW'�6V�V7F�$�r�6&Br����6&G2�f�$V6��2���2�7G��R�F�7���v���Rs�ғ��6��7B�6��6&G5��F��f���"��F��&�F�҂��6&G2��V�wF��Ӱ��6��7G��R�F�7���rs��6V2�6�74Ɨ7B�FB�w6�Vff�VBr���F�7V�V�B�vWDV�V�V�D'��B�v���r��67&���F����ЦgV�7F���6��t���V�vVₒ��6��7B6V2�F�7V�V�B�vWDV�V�V�D'��B�w6V2��V�vV�r���6V2�VW'�6V�V7F�$�r�6&Br��f�$V6��2���2�7G��R�F�7���rs�ғ��6V2�6�74Ɨ7B�&V��fR�w6�Vff�VBr���F�7V�V�B�vWDV�V�V�D'��B�v���r��67&���F����У��67&�C���&�G�����F�����؛�O���[�
