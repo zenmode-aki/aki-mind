@@ -6,7 +6,7 @@
       "dayNumber": 1,
       "title": "旅の始まり",
       "emoji": "🌱",
-      "status": "current",
+      "status": "done",
       "items": [
         {
           "type": "memo",
@@ -28,6 +28,19 @@
           "type": "failure",
           "text": "記録を後回しにして忘れかけた → でも思い出して書いた。+10pt",
           "points": 10
+        }
+      ]
+    },
+    {
+      "date": "2026-07-11",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "emoji": "📅",
+      "status": "current",
+      "items": [
+        {
+          "type": "memo",
+          "text": "娯楽の基準マックス = 読書。動画よりも読書の方がリラックスできる。"
         }
       ]
     }
