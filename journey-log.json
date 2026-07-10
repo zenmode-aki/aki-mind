@@ -1,0 +1,35 @@
+{
+  "hero": "旅人あき",
+  "stages": [
+    {
+      "date": "2026-07-10",
+      "dayNumber": 1,
+      "title": "旅の始まり",
+      "emoji": "🌱",
+      "status": "current",
+      "items": [
+        {
+          "type": "memo",
+          "text": "GitHubで自分の記録を始めた。冒険のスタート。"
+        },
+        {
+          "type": "memo",
+          "text": "ブログコンセプト決定：自分を否定しない・人生を面白がる・セルフコンパッション"
+        },
+        {
+          "type": "memo",
+          "text": "資格勉強のコツ：Kindleで過去問を止めずに流し読みする"
+        },
+        {
+          "type": "achievement",
+          "title": "旅人として最初の一歩を踏み出した"
+        },
+        {
+          "type": "failure",
+          "text": "記録を後回しにして忘れかけた → でも思い出して書いた。+10pt",
+          "points": 10
+        }
+      ]
+    }
+  ]
+}
