@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>失敗ゲーム — あきの人生RPG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d1117; --surface: #161b22; --border: #21262d; --text: #e6edf3;
+      --muted: #7d8590; --green: #3fb950; --blue: #58a6ff; --purple: #a371f7;
+      --gold: #d29922; --orange: #f0883e; --red: #f85149; --tab-h: 62px;
+    }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; -webkit-font-smoothing: antialiased; overscroll-behavior: none; }
+    #app { height: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; }
+    #hdr { padding: 14px 18px 12px; border-bottom: 1px solid var(--border); background: rgba(13,17,23,0.96); backdrop-filter: blur(12px); flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; }
+    .hdr-left h1 { font-size: 17px; font-weight: 700; }
+    .hdr-left p  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .hdr-right { display: flex; gap: 14px; }
+    .hdr-stat { text-align: center; }
+    .hdr-num  { font-size: 20px; font-weight: 900; line-height: 1; }
+    .hdr-label{ font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .streak-num { color: var(--orange); }
+    .total-num  { color: var(--purple); }
+    main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(var(--tab-h) + 16px); }
+    .section { display: none; }
+    .section.active { display: block; }
+    #sec-today { padding: 20px 16px 8px; }
+    .pts-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px 20px 18px; text-align: center; margin-bottom: 16px; }
+    .pts-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .pts-display { display: flex; align-items: baseline; justify-content: center; gap: 4px; margin-bottom: 14px; }
+    .pts-today { font-size: 64px; font-weight: 900; color: var(--purple); line-height: 1; }
+    .pts-slash { font-size: 28px; color: var(--muted); }
+    .pts-goal  { font-size: 28px; color: var(--muted); font-weight: 700; }
+    .pts-unit  { font-size: 13px; color: var(--muted); margin-left: 4px; }
+    .prog-wrap { background: var(--border); border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 6px; }
+    .prog-bar { height: 100%; background: linear-gradient(90deg, var(--purple), #c084fc); border-radius: 8px; transition: width 0.4s cubic-bezier(.34,1.56,.64,1); }
+    .prog-hint { font-size: 11px; color: var(--muted); }
+    .fail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+    .fail-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 12px; cursor: pointer; text-align: left; transition: transform 0.1s, border-color 0.15s, background 0.15s; -webkit-tap-highlight-color: transparent; }
+    .fail-btn:active { transform: scale(0.93); }
+    .fail-btn.tapped { border-color: var(--purple); background: rgba(163,113,247,0.08); }
+    .fail-emoji { font-size: 26px; display: block; margin-bottom: 6px; }
+    .fail-name  { font-size: 13px; font-weight: 500; color: var(--text); display: block; line-height: 1.3; }
+    .fail-pts   { font-size: 11px; color: var(--purple); margin-top: 4px; font-weight: 700; }
+    .log-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .log-list { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .log-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); animation: slideIn 0.25s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+    .log-item:last-child { border-bottom: none; }
+    .log-icon { font-size: 18px; flex-shrink: 0; }
+    .log-name { font-size: 13px; color: var(--text); flex: 1; }
+    .log-pts  { font-size: 13px; font-weight: 700; color: var(--purple); }
+    .log-time { font-size: 11px; color: var(--muted); margin-left: 4px; }
+    .log-empty { padding: 28px 16px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    #sec-stats { padding: 20px 16px 8px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+    .stat-card h2 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 14px; }
+    .big-stat { font-size: 48px; font-weight: 900; color: var(--purple); line-height: 1; }
+    .big-stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .rank-display { font-size: 22px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+    .rank-next { font-size: 12px; color: var(--muted); }
+    .hist-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .hist-item:last-child { border-bottom: none; }
+    .hist-date { font-size: 12px; color: var(--muted); min-width: 60px; }
+    .hist-pts  { font-size: 15px; font-weight: 700; color: var(--purple); }
+    .hist-bar  { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .hist-fill { height: 100%; background: var(--purple); border-radius: 3px; }
+    #sec-reward { padding: 20px 16px 8px; }
+    .reward-card { background: var(--surface); border: 1px solid rgba(163,113,247,0.3); border-radius: 14px; padding: 18px; margin-bottom: 10px; display: flex; gap: 14px; align-items: flex-start; }
+    .reward-icon { font-size: 28px; flex-shrink: 0; }
+    .reward-name { font-size: 15px; font-weight: 500; color: var(--text); }
+    .reward-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+    .reward-milestone { font-size: 11px; color: var(--purple); margin-top: 6px; font-weight: 700; }
+    nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: var(--tab-h); background: rgba(13,17,23,0.97); border-top: 1px solid var(--border); display: flex; backdrop-filter: blur(16px); z-index: 10; }
+    .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; opacity: 0.4; border: none; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s; }
+    .tab.active { opacity: 1; }
+    .tab-icon  { font-size: 20px; line-height: 1; }
+    .tab-label { font-size: 10px; color: var(--muted); }
+    .tab.active .tab-label { color: var(--purple); }
+    #reward-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 40px 24px; }
+    #reward-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .rew-stars { font-size: 42px; margin-bottom: 12px; }
+    .rew-title { font-size: 28px; font-weight: 900; color: var(--purple); margin-bottom: 8px; }
+    .rew-sub   { font-size: 15px; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+    .rew-content { background: rgba(163,113,247,0.12); border: 1px solid rgba(163,113,247,0.35); border-radius: 18px; padding: 22px 24px; margin-bottom: 28px; max-width: 320px; }
+    .rew-content-icon { font-size: 36px; margin-bottom: 8px; }
+    .rew-content-name { font-size: 18px; font-weight: 700; color: var(--text); }
+    .rew-content-desc { font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+    .rew-close { background: var(--purple); color: #fff; border: none; border-radius: 12px; padding: 14px 40px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
+    .confetti-piece { position: fixed; width: 8px; height: 12px; border-radius: 2px; animation: confettiFall linear forwards; pointer-events: none; z-index: 110; }
+    @keyframes confettiFall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="hdr">
+    <div class="hdr-left"><h1>失敗ゲーム</h1><p id="hdr-rank">🌱 見習い冒険者</p></div>
+    <div class="hdr-right">
+      <div class="hdr-stat"><div class="hdr-num streak-num" id="streakNum">1</div><div class="hdr-label">連続日</div></div>
+      <div class="hdr-stat"><div class="hdr-num total-num" id="totalNum">0</div><div class="hdr-label">総Pt</div></div>
+    </div>
+  </div>
+  <main>
+    <section class="section active" id="sec-today">
+      <div class="pts-card">
+        <div class="pts-label">今日の失敗ポイント</div>
+        <div class="pts-display">
+          <span class="pts-today" id="todayPts">0</span>
+          <span class="pts-slash">/</span>
+          <span class="pts-goal">5</span>
+          <span class="pts-unit">pt</span>
+        </div>
+        <div class="prog-wrap"><div class="prog-bar" id="progBar" style="width:0%"></div></div>
+        <div class="prog-hint" id="progHint">あと5ptでご褒美！</div>
+      </div>
+      <div class="fail-grid">
+        <button class="fail-btn" onclick="addFailure('嫌な顔をされた','😬',1,event)"><span class="fail-emoji">😬</span><span class="fail-name">嫌な顔をされた</span><span class="fail-pts">+1pt</span></button>
+        <button class="fail-btn" onclick="addFailure('頼んで断られた','🙅',2,event)"><span class="fail-emoji">🙅</span><span class="fail-name">頼んで断られた</span><span class="fail-pts">+2pt</span></button>
+        <button class="fail-btn" onclick="addFailure('恥ずかしかった','😳',1,event)"><span class="fail-emoji">😳</span><span class="fail-name">恥ずかしかった</span><span class="fail-pts">+1pt</span></button>
+        <button class="fail-btn" onclick="addFailure('うまくできなかった','💦',1,event)"><span class="fail-emoji">💦</span><span class="fail-name">うまくできなかった</span><span class="fail-pts">+1pt</span></button>
+        <button class="fail-btn" onclick="addFailure('挑戦してみた','⚡',1,event)"><span class="fail-emoji">⚡</span><span class="fail-name">挑戦してみた</span><span class="fail-pts">+1pt</span></button>
+        <button class="fail-btn" onclick="addFailure('正直に言って気まずかった','💬',1,event)"><span class="fail-emoji">💬</span><span class="fail-name">正直に言って気まずかった</span><span class="fail-pts">+1pt</span></button>
+      </div>
+      <div class="log-title">今日の記録</div>
+      <div class="log-list" id="todayLog"><div class="log-empty">まだ記録がありません<br>上のボタンをタップしよう！</div></div>
+    </section>
+    <section class="section" id="sec-stats">
+      <div class="stat-card"><h2>現在のランク</h2><div class="rank-display" id="rankDisplay">🌱 見習い冒険者</div><div class="rank-next" id="rankNext"></div></div>
+      <div class="stat-card"><h2>累計失敗ポイント</h2><div class="big-stat" id="totalPtsBig">0</div><div class="big-stat-label">pt 獲得済み</div></div>
+      <div class="stat-card"><h2>ご褒美獲得回数</h2><div class="big-stat" id="rewardsEarned" style="color:var(--gold)">0</div><div class="big-stat-label">回</div></div>
+      <div class="stat-card"><h2>直近の記録</h2><div id="histList"><div style="color:var(--muted);font-size:13px;padding:8px 0;">まだ記録がありません</div></div></div>
+    </section>
+    <section class="section" id="sec-reward">
+      <div style="margin-bottom:16px;"><div style="font-size:13px;color:var(--muted);line-height:1.8;">5ポイント貯まるたびにご褒美がもらえます。<br>失敗した自分を、ちゃんと労ってあげよう。</div></div>
+      <div class="reward-card"><div class="reward-icon">📚</div><div><div class="reward-name">Kindleを開いて名言を読む</div><div class="reward-desc">止めずに流し読みでOK。5分だけ。</div><div class="reward-milestone">5pt ごとに解放</div></div></div>
+      <div class="reward-card"><div class="reward-icon">☕</div><div><div class="reward-name">好きな飲み物をゆっくり飲む</div><div class="reward-desc">コーヒーでも何でも。ちゃんと味わう。</div><div class="reward-milestone">5pt ごとに解放</div></div></div>
+      <div class="reward-card"><div class="reward-icon">🎵</div><div><div class="reward-name">好きな音楽を1曲フルで聴く</div><div class="reward-desc">何もしないで音楽だけに集中する時間。</div><div class="reward-milestone">5pt ごとに解放</div></div></div>
+      <div class="reward-card"><div class="reward-icon">🍫</div><div><div class="reward-name">好きなお菓子を食べる</div><div class="reward-desc">罪悪感ゼロ。失敗した自分へのご褒美。</div><div class="reward-milestone">5pt ごとに解放</div></div></div>
+      <div class="reward-card"><div class="reward-icon">🛁</div><div><div class="reward-name">ゆっくりお風呂に入る</div><div class="reward-desc">夜勤明けに特におすすめ。</div><div class="reward-milestone">5pt ごとに解放</div></div></div>
+    </section>
+  </main>
+  <nav>
+    <button class="tab active" onclick="showTab('sec-today','t0')"><span class="tab-icon">💥</span><span class="tab-label" id="t0">今日</span></button>
+    <button class="tab" onclick="showTab('sec-stats','t1')"><span class="tab-icon">📊</span><span class="tab-label" id="t1">戦績</span></button>
+    <button class="tab" onclick="showTab('sec-reward','t2')"><span class="tab-icon">🎁</span><span class="tab-label" id="t2">ご褒美</span></button>
+    <button class="tab" onclick="window.location.href='journey.html'"><span class="tab-icon">🗺️</span><span class="tab-label">マップ</span></button>
+  </nav>
+</div>
+<div id="reward-overlay">
+  <div class="rew-stars">🎉✨🎊</div>
+  <div class="rew-title">5pt 達成！</div>
+  <div class="rew-sub">失敗した分だけ強くなった。<br>今日のご褒美はこれ：</div>
+  <div class="rew-content">
+    <div class="rew-content-icon" id="rew-icon">📚</div>
+    <div class="rew-content-name" id="rew-name">Kindleを開いて名言を読む</div>
+    <div class="rew-content-desc" id="rew-desc">止めずに流し読みでOK。5分だけ。</div>
+  </div>
+  <button class="rew-close" onclick="closeReward()">受け取った！</button>
+</div>
+<script>
+const K = { total:'aki_total_pt', todayPt:'aki_today_pt', todayDate:'aki_today_date', todayLog:'aki_today_log', streak:'aki_streak', lastLogin:'aki_last_login', rewards:'aki_rewards_earned' };
+const RANKS = [[300,'⚔️ 賢者','上限なし'],[150,'🛡️ 試練を越えし者','賢者まで残り %d pt'],[50,'🗡️ 失敗の申し子','試練を越えし者まで残り %d pt'],[0,'🌱 見習い冒険者','失敗の申し子まで残り %d pt']];
+const REWARDS = [{icon:'📚',name:'Kindleを開いて名言を読む',desc:'止めずに流し読みでOK。5分だけ。'},{icon:'☕',name:'好きな飲み物をゆっくり飲む',desc:'コーヒーでも何でも。ちゃんと味わう。'},{icon:'🎵',name:'好きな音楽を1曲フルで聴く',desc:'何もしないで音楽だけに集中する時間。'},{icon:'🍫',name:'好きなお菓子を食べる',desc:'罪悪感ゼロ。失敗した自分へのご褒美。'},{icon:'🛁',name:'ゆっくりお風呂に入る',desc:'夜勤明けに特におすすめ。'}];
+let state = {};
+function loadState() {
+  const today = new Date().toLocaleDateString('ja-JP');
+  const lastDate = localStorage.getItem(K.todayDate) || '';
+  if (lastDate !== today) {
+    if (lastDate) { const pp = parseInt(localStorage.getItem(K.todayPt)||'0'); if(pp>0){const h=JSON.parse(localStorage.getItem('aki_history')||'[]');h.unshift({date:lastDate,pts:pp});if(h.length>14)h.pop();localStorage.setItem('aki_history',JSON.stringify(h));} }
+    localStorage.setItem(K.todayDate,today); localStorage.setItem(K.todayPt,'0'); localStorage.setItem(K.todayLog,'[]');
+  }
+  const lastLogin = localStorage.getItem(K.lastLogin)||'';
+  if (lastLogin !== today) {
+    const yest = new Date(); yest.setDate(yest.getDate()-1); const ys = yest.toLocaleDateString('ja-JP');
+    let s = parseInt(localStorage.getItem(K.streak)||'0');
+    s = lastLogin===ys ? s+1 : 1;
+    localStorage.setItem(K.streak,String(s)); localStorage.setItem(K.lastLogin,today);
+  }
+  state = { total:parseInt(localStorage.getItem(K.total)||'0'), todayPt:parseInt(localStorage.getItem(K.todayPt)||'0'), todayLog:JSON.parse(localStorage.getItem(K.todayLog)||'[]'), streak:parseInt(localStorage.getItem(K.streak)||'1'), rewards:parseInt(localStorage.getItem(K.rewards)||'0') };
+}
+function saveState() { localStorage.setItem(K.total,String(state.total)); localStorage.setItem(K.todayPt,String(state.todayPt)); localStorage.setItem(K.todayLog,JSON.stringify(state.todayLog)); localStorage.setItem(K.rewards,String(state.rewards)); }
+function getRankInfo(pts) {
+  for (const [t,n,f] of RANKS) { if(pts>=t){ const nt=RANKS.find(r=>r[0]>t)?.[0]; return {name:n,next:nt?f.replace('%d',nt-pts):'最高ランク到達！'}; } }
+  return {name:'🌱 見習い冒険者',next:'失敗の申し子まで残り 50 pt'};
+}
+function render() {
+  document.getElementById('streakNum').textContent = state.streak;
+  document.getElementById('totalNum').textContent  = state.total;
+  const ri = getRankInfo(state.total);
+  document.getElementById('hdr-rank').textContent    = ri.name;
+  document.getElementById('rankDisplay').textContent = ri.name;
+  document.getElementById('totalPtsBig').textContent = state.total;
+  document.getElementById('rewardsEarned').textContent = state.rewards;
+  document.getElementById('rankNext').textContent    = ri.next;
+  const mod = state.todayPt % 5;
+  document.getElementById('todayPts').textContent = mod;
+  document.getElementById('progBar').style.width = (mod/5*100)+'%';
+  const tn = 5-mod; document.getElementById('progHint').textContent = tn===0 ? '🎁 ご褒美ゲット！' : 'あと'+tn+'ptでご褒美！';
+  const el = document.getElementById('todayLog');
+  el.innerHTML = state.todayLog.length ? state.todayLog.map(it=>'<div class="log-item"><span class="log-icon">'+it.icon+'</span><span class="log-name">'+it.name+'</span><span class="log-pts">+'+it.pts+'pt</span><span class="log-time">'+it.time+'</span></div>').join('') : '<div class="log-empty">まだ記録がありません<br>上のボタンをタップしよう！</div>';
+  const hist = JSON.parse(localStorage.getItem('aki_history')||'[]');
+  const hel = document.getElementById('histList');
+  const mx = Math.max(...hist.map(h=>h.pts),1);
+  hel.innerHTML = hist.length ? hist.map(h=>'<div class="hist-item"><span class="hist-date">'+h.date.replace(/\d{4}\//,'')+'</span><div class="hist-bar"><div class="hist-fill" style="width:'+(h.pts/mx*100)+'%"></div></div><span class="hist-pts">'+h.pts+'pt</span></div>').join('') : '<div style="color:var(--muted);font-size:13px;padding:8px 0;">まだ記録がありません</div>';
+}
+function addFailure(name, icon, pts, ev) {
+  const prev = state.todayPt;
+  state.todayPt += pts; state.total += pts;
+  const now = new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+  state.todayLog.unshift({name,icon,pts,time:now});
+  saveState(); render();
+  ev.currentTarget.classList.add('tapped');
+  setTimeout(()=>ev.currentTarget.classList.remove('tapped'),300);
+  if (Math.floor(state.todayPt/5) > Math.floor(prev/5)) { state.rewards++; saveState(); setTimeout(()=>showReward(),400); }
+}
+function showReward() {
+  const r = REWARDS[state.rewards % REWARDS.length];
+  document.getElementById('rew-icon').textContent = r.icon;
+  document.getElementById('rew-name').textContent = r.name;
+  document.getElementById('rew-desc').textContent = r.desc;
+  document.getElementById('reward-overlay').classList.add('show');
+  const colors=['#a371f7','#58a6ff','#3fb950','#d29922','#f0883e'];
+  for(let i=0;i<40;i++){const e=document.createElement('div');e.className='confetti-piece';e.style.left=Math.random()*100+'vw';e.style.background=colors[Math.floor(Math.random()*colors.length)];e.style.animationDuration=(1.5+Math.random()*2)+'s';e.style.animationDelay=(Math.random()*0.5)+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),3500);}
+}
+function closeReward() { document.getElementById('reward-overlay').classList.remove('show'); }
+function showTab(secId,labelId) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(secId).classList.add('active');
+  document.getElementById(labelId)?.closest('.tab').classList.add('active');
+  document.querySelector('main').scrollTop=0;
+}
+loadState(); render();
+</script>
+</body>
+</html>
