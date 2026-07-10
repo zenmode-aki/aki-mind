@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>冒険の記録 — あきのマップ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2128;
+      --border: #21262d;
+      --text: #e6edf3;
+      --muted: #7d8590;
+      --green: #3fb950;
+      --blue: #58a6ff;
+      --gold: #d29922;
+      --red: #f85149;
+      --purple: #a371f7;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      overscroll-behavior: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #app {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100%;
+      position: relative;
+    }
+
+    #hdr {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(13,17,23,0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-name { font-size: 17px; font-weight: 700; }
+    .hero-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .stats { display: flex; gap: 20px; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 22px; font-weight: 700; color: var(--blue); line-height: 1; }
+    .stat-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    #map-wrap {
+      position: relative;
+      padding: 28px 0 60px;
+    }
+
+    #path-svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .stage-row {
+      position: relative;
+      height: 116px;
+      display: flex;
+      align-items: center;
+    }
+
+    .node-wrap {
+      position: absolute;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      z-index: 2;
+    }
+
+    .node-wrap.locked { cursor: default; }
+
+    .node {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      transition: transform 0.12s, box-shadow 0.2s;
+      position: relative;
+      user-select: none;
+    }
+
+    .node-wrap:not(.locked):active .node { transform: scale(0.9); }
+
+    .node.done {
+      background: linear-gradient(145deg, #3fb950, #2ea043);
+      box-shadow: 0 4px 18px rgba(63,185,80,0.4), 0 0 0 3px rgba(63,185,80,0.15);
+    }
+
+    .node.current {
+      background: linear-gradient(145deg, #58a6ff, #388bfd);
+      box-shadow: 0 4px 24px rgba(88,166,255,0.55), 0 0 0 3px rgba(88,166,255,0.2);
+      animation: glow 2.5s ease-in-out infinite;
+    }
+
+    .node.locked {
+      background: linear-gradient(145deg, #21262d, #161b22);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 4px 24px rgba(88,166,255,0.55), 0 0 0 3px rgba(88,166,255,0.2); }
+      50%       { box-shadow: 0 6px 36px rgba(88,166,255,0.8),  0 0 0 6px rgba(88,166,255,0.15); }
+    }
+
+    .node-emoji { font-size: 28px; line-height: 1; }
+    .node-num   { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.75); margin-top: 3px; letter-spacing: 0.03em; }
+
+    .star-badge {
+      position: absolute;
+      top: -9px; right: -9px;
+      font-size: 19px;
+      filter: drop-shadow(0 1px 4px rgba(0,0,0,0.6));
+    }
+
+    .node-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      max-width: 88px;
+      line-height: 1.35;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .node.current ~ .node-label { color: var(--blue); font-weight: 500; }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 30;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    #overlay.show { opacity: 1; pointer-events: auto; }
+
+    #sheet {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(102%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-radius: 20px 20px 0 0;
+      z-index: 40;
+      transition: transform 0.3s cubic-bezier(.32,.72,0,1);
+      max-height: 82vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #sheet.open { transform: translateX(-50%) translateY(0); }
+
+    .sh-handle {
+      width: 40px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 12px auto 0;
+    }
+
+    .sh-head {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .sh-emoji { font-size: 32px; }
+    .sh-title { font-size: 15px; font-weight: 700; line-height: 1.3; }
+    .sh-date  { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    .sh-status {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-top: 5px;
+    }
+
+    .status-current { background: rgba(88,166,255,0.15); color: var(--blue); border: 1px solid rgba(88,166,255,0.3); }
+    .status-done    { background: rgba(63,185,80,0.15);  color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+
+    .sh-items { padding: 8px 20px 20px; }
+
+    .sh-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sh-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .sh-item:first-child { padding-top: 8px; }
+
+    .sh-icon { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+
+    .sh-body { flex: 1; min-width: 0; }
+    .sh-type { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+    .sh-text { font-size: 14px; color: var(--text); line-height: 1.75; }
+
+    .sh-link {
+      font-size: 14px;
+      color: var(--blue);
+      text-decoration: none;
+      line-height: 1.6;
+      word-break: break-all;
+    }
+
+    .sh-link:hover { text-decoration: underline; }
+    .sh-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+    .sh-empty {
+      text-align: center;
+      padding: 28px 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .map-empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    .map-empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <div id="hdr">
+    <div>
+      <div class="hero-name">旅人あき</div>
+      <div class="hero-sub" id="hero-rank">冒険を続けている</div>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num" id="sTotal">—</div>
+        <div class="stat-label">総日数</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="sFailPt" style="color:var(--purple)">—</div>
+        <div class="stat-label">失敗Pt</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="sItems">—</div>
+        <div class="stat-label">記録数</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="map-wrap">
+    <svg id="path-svg"></svg>
+    <div id="map"></div>
+  </div>
+
+  <div id="overlay" onclick="closeSheet()"></div>
+  <div id="sheet">
+    <div class="sh-handle"></div>
+    <div id="sheet-inner"></div>
+  </div>
+
+</div>
+<script>
+const SAMPLE = {
+  hero: "旅人あき",
+  stages: [
+    {
+      date: "2026-07-10",
+      dayNumber: 1,
+      title: "旅の始まり",
+      emoji: "🌱",
+      status: "current",
+      items: [
+        { type: "memo", text: "GitHubで自分の記録を始めた。これが冒険の第一歩。" },
+        { type: "memo", text: "ブログコンセプト決定：自分を否定しない・人生を面白がる・セルフコンパッション" },
+        { type: "memo", text: "資格勉強のコツ：Kindleで過去問を止めずに流し読みする" }
+      ]
+    }
+  ]
+};
+
+const XS = [50, 68, 77, 64, 48, 32, 23, 36];
+const ROW_H = 116;
+const PAD_T = 28;
+
+let stagesData = [];
+
+async function init() {
+  let data;
+  try {
+    const r = await fetch('journey-log.json?' + Date.now());
+    if (!r.ok) throw 0;
+    data = await r.json();
+  } catch(e) { data = SAMPLE; }
+
+  stagesData = data.stages || [];
+
+  const active = stagesData.filter(s => s.status !== 'upcoming');
+  const totalItems = stagesData.reduce((n,s) => n + (s.items||[]).length, 0);
+  const failPt = stagesData.reduce((n,s) => {
+    return n + (s.items||[]).filter(it => it.type === 'failure').reduce((p,it) => p + (it.points || 10), 0);
+  }, 0);
+  document.getElementById('sTotal').textContent = active.length;
+  document.getElementById('sItems').textContent = totalItems;
+  document.getElementById('sFailPt').textContent = failPt;
+
+  const ranks = [
+    [300, '⚔️ 賢者'],
+    [150, '🛡️ 試練を越えし者'],
+    [50,  '🗡️ 失敗の申し子'],
+    [0,   '🌱 見習い冒険者'],
+  ];
+  const rank = ranks.find(r => failPt >= r[0])?.[1] || '🌱 見習い冒険者';
+  document.getElementById('hero-rank').textContent = rank;
+
+  renderMap();
+}
+
+function renderMap() {
+  const map = document.getElementById('map');
+
+  if (!stagesData.length) {
+    map.innerHTML = '<div class="map-empty"><span class="map-empty-icon">🗺️</span>まだ記録がありません<br>冒険を始めましょう</div>';
+    return;
+  }
+
+  const sorted = [...stagesData].sort((a, b) => b.dayNumber - a.dayNumber);
+  let html = '';
+
+  sorted.forEach((s, i) => {
+    const x   = XS[i % XS.length];
+    const cls = s.status === 'upcoming' ? 'locked' : s.status === 'done' ? 'done' : 'current';
+    const ico = s.status === 'upcoming' ? '🔒' : (s.emoji || '⭐');
+    const clickable = s.status !== 'upcoming';
+
+    html += '<div class="stage-row" id="sr' + i + '"><div class="node-wrap' + (clickable ? '' : ' locked') + '" style="left:' + x + '%"' + (clickable ? ' onclick="openSheet(' + s.dayNumber + ')"' : '') + '><div class="node ' + cls + '"><div class="node-emoji">' + ico + '</div><div class="node-num">Day ' + s.dayNumber + '</div>' + (s.status==='done' ? '<div class="star-badge">⭐</div>' : '') + '</div><div class="node-label">' + s.title + '</div></div></div>';
+  });
+
+  map.innerHTML = html;
+  requestAnimationFrame(() => drawPath(sorted));
+}
+
+function drawPath(sorted) {
+  const wrap = document.getElementById('map-wrap');
+  const svg  = document.getElementById('path-svg');
+  const W    = wrap.offsetWidth;
+  const H    = PAD_T + sorted.length * ROW_H + 60;
+
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+  const pts = sorted.map((s, i) => ({
+    x: W * XS[i % XS.length] / 100,
+    y: PAD_T + i * ROW_H + ROW_H / 2,
+    status: s.status
+  }));
+
+  if (pts.length < 2) { svg.innerHTML = ''; return; }
+
+  const buildPath = (points) => {
+    let d = 'M ' + points[0].x + ' ' + points[0].y;
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = points[i], p2 = points[i+1];
+      const my = (p1.y + p2.y) / 2;
+      d += ' C ' + p1.x + ' ' + my + ' ' + p2.x + ' ' + my + ' ' + p2.x + ' ' + p2.y;
+    }
+    return d;
+  };
+
+  const fullD = buildPath(pts);
+  const lockIdx = pts.findIndex(p => p.status === 'upcoming');
+  const doneEnd = lockIdx === -1 ? pts.length : lockIdx;
+  const doneD   = doneEnd >= 2 ? buildPath(pts.slice(0, doneEnd)) : '';
+
+  svg.innerHTML = '<path d="' + fullD + '" fill="none" stroke="#21262d" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>' + (doneD ? '<path d="' + doneD + '" fill="none" stroke="#3fb950" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>' : '');
+}
+
+const ICONS  = { memo:'📝', blog:'✍️', link:'🔗', achievement:'🏆', sns:'📱', failure:'💥' };
+const LABELS = { memo:'メモ', blog:'ブログ', link:'リンク', achievement:'達成', sns:'シェア', failure:'失敗ポイント' };
+
+function openSheet(dayNum) {
+  const s = stagesData.find(x => x.dayNumber === dayNum);
+  if (!s) return;
+
+  const dateStr = s.date
+    ? new Date(s.date).toLocaleDateString('ja-JP', { year:'numeric', month:'long', day:'numeric' })
+    : '';
+
+  const statusBadge = s.status === 'current'
+    ? '<span class="sh-status status-current">進行中</span>'
+    : '<span class="sh-status status-done">完了</span>';
+
+  const itemsHTML = (s.items || []).map(it => {
+    const icon  = ICONS[it.type]  || '📌';
+    const label = LABELS[it.type] || it.type;
+    let body = '';
+    if (it.url) {
+      body  = '<a class="sh-link" href="' + it.url + '" target="_blank" rel="noopener">' + (it.title || it.url) + '</a>';
+      if (it.description) body += '<div class="sh-desc">' + it.description + '</div>';
+    } else if (it.type === 'failure') {
+      const pts = it.points || 10;
+      body = '<div class="sh-text">' + (it.text || it.title || '') + '</div>';
+      body += '<div class="sh-desc" style="color:var(--purple);margin-top:5px">+' + pts + 'pt 獲得 💜</div>';
+    } else {
+      body = '<div class="sh-text">' + (it.text || it.title || '') + '</div>';
+    }
+    return '<div class="sh-item"><div class="sh-icon">' + icon + '</div><div class="sh-body"><div class="sh-type">' + label + '</div>' + body + '</div></div>';
+  }).join('');
+
+  document.getElementById('sheet-inner').innerHTML = '<div class="sh-head"><div class="sh-emoji">' + (s.emoji || '⭐') + '</div><div><div class="sh-title">Day ' + s.dayNumber + ' — ' + s.title + '</div><div class="sh-date">' + dateStr + '</div>' + statusBadge + '</div></div><div class="sh-items">' + (itemsHTML || '<div class="sh-empty">まだ記録がありません<br>Claudeに「Day ' + s.dayNumber + 'にメモ追加して」と言えばOK</div>') + '</div>';
+
+  document.getElementById('sheet').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeSheet() {
+  document.getElementById('sheet').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+window.addEventListener('resize', () => {
+  const sorted = [...stagesData].sort((a,b) => b.dayNumber - a.dayNumber);
+  drawPath(sorted);
+});
+
+init();
+</script>
+</body>
+</html>
